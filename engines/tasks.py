@@ -71,29 +71,55 @@ def importfindings_task(self, report_filename, owner_id, engine, min_level):
                          type="ERROR", severity="ERROR")
             return False
         try:
+            start = None
+            end = None
             for block in root:
                 if block.tag == 'Report':
                     for report_host in block:
                         asset = dict()
                         asset['name'] = report_host.attrib['name']
+                        asset['categories'] = list()
+                        asset['description'] = None
                         for report_item in report_host:
                             if report_item.tag == 'HostProperties':
                                 for tag in report_item:
                                     asset[tag.attrib['name']] = tag.text
-                            if not net.is_valid_ip(asset.get('host-ip', asset.get('name'))):
-                                Event.objects.create(
-                                    message="[EngineTasks/importfindings_task()] finding not added.",
-                                    type="DEBUG", severity="INFO",
-                                    scan=scan,
-                                    description="No ip address for asset {} found".format(asset.get('name'))
-                                )
-                                summary['missing'] += 1
-                                continue
+                                if asset.get('HOST_START') is not None:
+                                    host_start = datetime.datetime.strptime(asset.get('HOST_START'), '%a %b %d %H:%M:%S %Y')
+                                    if start is None:
+                                        start = host_start
+                                    elif host_start < start:
+                                        start = host_start
+                                if asset.get('HOST_END') is not None:
+                                    host_end = datetime.datetime.strptime(asset.get('HOST_END'), '%a %b %d %H:%M:%S %Y')
+                                    if end is None:
+                                        end = host_end
+                                    elif host_end > end:
+                                        end = host_end
+                                if asset.get('host-fqdn') is not None:
+                                    asset['type'] = 'fqdn'
+                                    asset['value'] = asset.get('host-fqdn')
+                                elif asset.get('host-ip') is not None and net.is_valid_ip(asset.get('host-ip')):
+                                    asset['type'] = 'ip'
+                                    asset['value'] = asset.get('host-ip')
+                                else:
+                                    if net.is_valid_ip(asset['name']):
+                                        asset['type'] = 'ip'
+                                        asset['value'] = asset['name']
+                                    else:
+                                        asset['type'] = 'domain'
+                                        asset['value'] = asset['name']
+
+                                if asset.get('operating-system') is not None:
+                                    asset['categories'].extend(asset.get('operating-system').split('\n'))
+                                elif asset.get('os') is not None:
+                                    asset['categories'].append(asset.get('os'))
+
                             if 'pluginName' in report_item.attrib:
                                 summary['total'] += 1
                                 finding = {
                                             "target": {
-                                                "addr": [asset.get('host-ip', asset.get('name'))]
+                                                "addr": [asset['value']]
                                             },
                                             "metadata": {
                                                 "risk": {
@@ -117,6 +143,13 @@ def importfindings_task(self, report_filename, owner_id, engine, min_level):
                                     continue
                                 finding['severity'] = value_to_level.get(int(report_item.attrib['severity']), 'info')
                                 summary[finding['severity']] += 1
+
+                                if report_item.attrib.get('port', 0) != 0 and report_item.attrib.get('svc_name', 'general') != 'general':
+                                    finding['metadata']['tags'].append(report_item.attrib.get('svc_name'))
+                                    if report_item.attrib.get('protocol') is not None:
+                                         finding['metadata']['tags'].append('port=' + str(report_item.attrib.get('port')) + '/' + report_item.attrib.get('protocol'))
+                                    else:
+                                         finding['metadata']['tags'].append('port=' + str(report_item.attrib.get('port')))
 
                                 for param in report_item:
                                     if param.tag == 'vuln_publication_date':
@@ -152,7 +185,13 @@ def importfindings_task(self, report_filename, owner_id, engine, min_level):
                                     if param.tag == 'exploitability_ease':
                                         finding['metadata']['risk']['exploitability_ease'] = param.text
                                     if param.tag == 'exploited_by_nessus':
-                                        finding['metadata']['risk']['exploited_by_nessus'] = param.text
+                                        finding['metadata']['risk']['exploited_by_nessus'] = param.text 
+                                    if param.tag == 'exploited_by_malware':
+                                        finding['metadata']['risk']['exploited_by_malware'] = param.text
+                                    if re.match('exploit\_framework\_.*', param.tag):
+                                        finding['metadata']['risk'][param.tag] = param.text
+                                    if param.tag == 'metasploit_name':
+                                        finding['metadata']['risk']['metasploit_name'] = param.text
                                     if param.tag == 'patch_publication_date':
                                         finding['metadata']['risk']['patch_publication_date'] = param.text
 
@@ -168,7 +207,7 @@ def importfindings_task(self, report_filename, owner_id, engine, min_level):
 
                                     if param.tag == 'plugin_output':
                                         finding['raw'] = param.text
-                                data.append(finding)
+                                data.append(finding)  
         except Exception as e:
             Event.objects.create(message="[EngineTasks/importfindings_task()] Error parsing nessus file.", description="{}".format(e.message),
                          type="ERROR", severity="ERROR")
@@ -183,15 +222,20 @@ def importfindings_task(self, report_filename, owner_id, engine, min_level):
                                                                 description='Scan definition for nessus imports',
                                                                 engine_type=nessus_engine,
                                                                 engine_policy=nessus_import_policy)
-            scan = Scan.objects.create(title='nessus_' + datetime.date.today().isoformat(),
-                                       status='finished',
-                                       summary=summary,
+            scan = Scan.objects.create(title='nessus_import_' + datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S'),
+                                       status='started', 
+                                       summary=summary, 
                                        engine_type=nessus_engine,
                                        engine_policy=nessus_import_policy,
                                        owner=User.objects.filter(id=owner_id).first(),
                                        scan_definition=scan_definition)
+            if start is not None and end is not None:
+                scan.started_at = start
+                scan.finished_at = end
             scan.save()
             _import_findings(findings=data, scan=scan)
+            scan.status = 'finished'
+            scan.save()
         except Exception as e:
             Event.objects.create(message="[EngineTasks/importfindings_task()] Error importing findings.", description="{}".format(e.message),
                          type="ERROR", severity="ERROR")
