@@ -56,6 +56,213 @@ def importfindings_task(self, report_filename, owner_id):
         # print (e.message)
         return False
 
+    if engine == 'nessus':
+
+        summary = {"info": 0, "medium": 0, "missing": 0, "high": 0, "critical": 0, "low": 0, "new": 0, "total": 0}
+
+        Event.objects.create(message='[EngineTasks/importfindings_task()] engine: nessus', type="INFO", severity="INFO")
+        try:
+            import cElementTree as ET
+        except ImportError:
+            try:
+                # Python 2.5 need to import a different module
+                import xml.etree.cElementTree as ET
+            except ImportError:
+                Event.objects.create(message="[EngineTasks/importfindings_task()] Unable to import xml parser.", type="ERROR", severity="ERROR")
+                return False
+        # parse nessus file
+        data = list()
+        try:
+            dom = ET.parse(open(report_filename, "r"))
+            root = dom.getroot()
+        except Exception as e:
+            Event.objects.create(message="[EngineTasks/importfindings_task()] Unable to open and parse report file.", description="{}".format(e.message),
+                         type="ERROR", severity="ERROR")
+            return False
+        try:
+            start = None
+            end = None
+            
+            for block in root:
+                if block.tag == 'Report':
+                    for report_host in block:
+                        asset = dict()
+                        asset['name'] = report_host.attrib['name']
+                        asset['categories'] = list()
+                        asset['description'] = None
+                        for report_item in report_host:
+                            if report_item.tag == 'HostProperties':
+                                for tag in report_item:
+                                    asset[tag.attrib['name']] = tag.text
+                                if asset.get('HOST_START') is not None:
+                                    host_start = datetime.datetime.strptime(asset.get('HOST_START'), '%a %b %d %H:%M:%S %Y')
+                                    if start is None:
+                                        start = host_start
+                                    elif host_start < start:
+                                        start = host_start
+                                if asset.get('HOST_END') is not None:
+                                    host_end = datetime.datetime.strptime(asset.get('HOST_END'), '%a %b %d %H:%M:%S %Y')
+                                    if end is None:
+                                        end = host_end
+                                    elif host_end > end:
+                                        end = host_end
+                                if asset.get('host-fqdn') is not None:
+                                    asset['type'] = 'fqdn'
+                                    asset['value'] = asset.get('host-fqdn')
+                                elif asset.get('host-ip') is not None and net.is_valid_ip(asset.get('host-ip')):
+                                    asset['type'] = 'ip'
+                                    asset['value'] = asset.get('host-ip')
+                                else:
+                                    if net.is_valid_ip(asset['name']):
+                                        asset['type'] = 'ip'
+                                        asset['value'] = asset['name']
+                                    else:
+                                        asset['type'] = 'domain'
+                                        asset['value'] = asset['name']
+
+                                if asset.get('operating-system') is not None:
+                                    asset['categories'].extend(asset.get('operating-system').split('\n'))
+                                elif asset.get('os') is not None:
+                                    asset['categories'].append(asset.get('os'))
+                            if 'pluginName' in report_item.attrib:
+                                summary['total'] += 1
+                                finding = {
+                                            "target": {
+                                                "addr": [asset['value']]
+                                            },
+                                            "metadata": {
+                                                "risk": {
+                                                    "cvss_base_score": "0.0"
+                                                },
+                                                "vuln_refs": {},
+                                                "links": list(),
+                                                "tags": list()
+                                            },
+                                            "title": report_item.attrib['pluginName'],
+                                            "type": "Vuln",
+                                            "confidence": "3",
+                                            "severity": "info",
+                                            "description": "n/a",
+                                            "solution": "n/a",
+                                            "raw": None
+                                        }
+                                if int(report_item.attrib['severity']) < min_level:
+                                    # if below min level descard finding
+                                    summary['missing'] += 1
+                                    continue
+                                finding['severity'] = value_to_level.get(int(report_item.attrib['severity']), 'info')
+                                summary[finding['severity']] += 1
+
+                                if report_item.attrib.get('port', 0) != 0 and report_item.attrib.get('svc_name', 'general') != 'general':
+                                    finding['metadata']['tags'].append(report_item.attrib.get('svc_name'))
+                                    if report_item.attrib.get('protocol') is not None:
+                                         finding['metadata']['tags'].append('port=' + str(report_item.attrib.get('port')) + '/' + report_item.attrib.get('protocol'))
+                                    else:
+                                         finding['metadata']['tags'].append('port=' + str(report_item.attrib.get('port')))
+
+                                for param in report_item:
+                                    if param.tag == 'vuln_publication_date':
+                                        finding['metadata']['vuln_publication_date'] = param.text
+
+                                    if param.tag == 'solution':
+                                        finding['solution'] = param.text
+                                    if param.tag == 'description':
+                                        finding['description'] = param.text
+
+                                    if param.tag == 'cvss_vector':
+                                        finding['metadata']['risk']['cvss_vector'] = param.text
+                                    if param.tag == 'cvss_base_score':
+                                        finding['metadata']['risk']['cvss_base_score'] = param.text
+
+                                    if param.tag == 'cvss_temporal_vector':
+                                        finding['metadata']['risk']['cvss_temporal_vector'] = param.text
+                                    if param.tag == 'cvss_temporal_score':
+                                        finding['metadata']['risk']['cvss_temporal_score'] = param.text
+
+                                    if param.tag == 'cvss3_vector':
+                                        finding['metadata']['risk']['cvss3_vector'] = param.text
+                                    if param.tag == 'cvss3_base_score':
+                                        finding['metadata']['risk']['cvss3_base_score'] = param.text
+
+                                    if param.tag == 'cvss3_temporal_vector':
+                                        finding['metadata']['risk']['cvss3_temporal_vector'] = param.text
+                                    if param.tag == 'cvss3_temporal_score':
+                                        finding['metadata']['risk']['cvss3_temporal_score'] = param.text
+
+                                    if param.tag == 'exploit_available':
+                                        finding['metadata']['risk']['exploit_available'] = param.text
+                                    if param.tag == 'exploitability_ease':
+                                        finding['metadata']['risk']['exploitability_ease'] = param.text
+                                    if param.tag == 'exploited_by_nessus':
+                                        finding['metadata']['risk']['exploited_by_nessus'] = param.text 
+                                    if param.tag == 'exploited_by_malware':
+                                        finding['metadata']['risk']['exploited_by_malware'] = param.text
+                                    if re.match('exploit\_framework\_.*', param.tag):
+                                        finding['metadata']['risk'][param.tag] = param.text
+                                    if param.tag == 'metasploit_name':
+                                        finding['metadata']['risk']['metasploit_name'] = param.text
+                                    if param.tag == 'patch_publication_date':
+                                        finding['metadata']['risk']['patch_publication_date'] = param.text
+
+                                    if param.tag == 'cve':
+                                        finding['metadata']['vuln_refs']['cve'] = param.text
+                                    if param.tag == 'bid':
+                                        finding['metadata']['vuln_refs']['bid'] = param.text
+                                    if param.tag == 'xref':
+                                        finding['metadata']['vuln_refs'][param.text.split(':')[0]] = param.text.split(':')[1]
+                                    if param.tag == 'see_also':
+                                        for link in param.text.split('\n'):
+                                            finding['metadata']['links'].append(link)
+
+                                    if param.tag == 'plugin_output':
+                                        finding['raw'] = param.text
+                                data.append(finding)
+        except Exception as e:
+            Event.objects.create(message="[EngineTasks/importfindings_task()] Error parsing nessus file.", description="{}".format(e.message),
+                         type="ERROR", severity="ERROR")
+            return False
+        try:
+            nessus_engine = Engine.objects.filter(name='NESSUS').first()
+            nessus_import_policy = EnginePolicy.objects.filter(id=17).first()
+            scan_definition = ScanDefinition.objects.filter(title='Nessus import').first()
+            if scan_definition is None:
+                scan_definition = ScanDefinition.objects.create(title='Nessus import',
+                                                                scan_type='single',
+                                                                description='Scan definition for nessus imports',
+                                                                engine_type=nessus_engine,
+                                                                engine_policy=nessus_import_policy)
+            scan = Scan.objects.create(title='nessus_import_' + datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S'),
+                                       status='started', 
+                                       summary=summary, 
+                                       engine_type=nessus_engine,
+                                       engine_policy=nessus_import_policy,
+                                       owner=User.objects.filter(id=owner_id).first(),
+                                       scan_definition=scan_definition)
+            if start is not None and end is not None:
+                scan.started_at = start
+                scan.finished_at = end
+            scan.save()
+            _import_findings(findings=data, scan=scan)
+            scan.status = 'finished'
+            scan.save()
+        except Exception as e:
+            Event.objects.create(message="[EngineTasks/importfindings_task()] Error importing findings.", description="{}".format(e.message),
+                         type="ERROR", severity="ERROR")
+            return False
+    else:
+        # has to be json
+        with open(report_filename) as data_file:
+            data = json.load(data_file)
+
+        try:
+            _import_findings(findings=data['issues'], scan=Scan.objects.filter(title='test').first())
+        except Exception as e:
+            Event.objects.create(message="[EngineTasks/importfindings_task()] Error importing findings.", description="{}".format(e.message),
+                         type="ERROR", severity="ERROR")
+            #print (e.__doc__)
+            #print (e.message)
+            return False
+
     return True
 
 
