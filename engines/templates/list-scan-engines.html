@@ -136,7 +136,7 @@
     $("#modal-info-engine").on('show.bs.modal', function (e) {
       engine_id = e.relatedTarget.getAttribute('engine-id');
       xhr = $.ajax({
-        url: "{% url 'info_engine_api' %}"+engine_id,
+        url: "/engines/info/"+engine_id, // TODO how change this to dynamic url?
         method: "GET",
         dataType: 'json',
         beforeSend: function(){

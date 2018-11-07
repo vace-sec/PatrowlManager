@@ -257,7 +257,7 @@
       rule_id = e.currentTarget.getAttribute('rule-id');
 
       var request = $.ajax({
-        url: "{% url 'duplicate_rule_api' %}"+rule_id,
+        url: "/rules/api/v1/duplicate/"+rule_id, // TODO: how change this to dynamic url?
         method: "GET",
       });
       request.done(function(response){

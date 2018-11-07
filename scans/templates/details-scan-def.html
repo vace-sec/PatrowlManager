@@ -475,7 +475,7 @@ $(function() {
     }, 3000));
   });
   $("button.btn-run-now").on('click', function(eventObject) {
-    scan_url = "{% url 'run_scan_def' %}"+eventObject.target.getAttribute('scan-id')
+    scan_url = "{% url 'run_scan_def' scan_def.id %}";
     var xhr = $.get(scan_url, function(data) {
       //location.reload();
     })
