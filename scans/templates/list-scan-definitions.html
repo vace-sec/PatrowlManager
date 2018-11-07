@@ -163,7 +163,7 @@
       }, 3000));
     });
     $("button.btn-run-now").on('click', function(eventObject) {
-      scan_url = "{% url 'run_scan_def' %}"+eventObject.target.getAttribute('scan-id')
+      scan_url = "/scans/defs/run/"+eventObject.target.getAttribute('scan-id') // TODO how change this to dynamic url?
       var xhr = $.get(scan_url, function(data) {
         //location.reload()
       })
@@ -171,8 +171,8 @@
 
     // Change periodic scan status Event
     $("button.btn-change-status").on('click', function(eventObject) {
-      scan_id = eventObject.target.getAttribute('scan-id')
-      scan_url = "{% url 'toggle_scan_def_status' %}"+scan_id
+      scan_id = eventObject.target.getAttribute('scan-id') // TODO how change this to dynamic url?
+      scan_url = "/scans/defs/change_status/"+scan_id
       var xhr = $.get( scan_url, function(data) {
         location.reload()
         if (xhr.status == 200) {

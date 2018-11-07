@@ -124,7 +124,6 @@ function toggle(source, element) {
             <tbody>
             {% for asset in assets|sort_by:"criticity,value" %}
             <tr>
-            <!-- <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}?raw=true'> -->
               <td>{{ asset.value|truncatechars:35 }}</td>
               <td>{{ asset.type }}</td>
               {% if asset.criticity == 'low' %}

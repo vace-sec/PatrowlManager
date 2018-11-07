@@ -269,7 +269,7 @@
     $('span.rule-status').on('dblclick', function(e){
       rule_id = e.currentTarget.getAttribute('rule-id');
       var request = $.ajax({
-        url: "{% url 'toggle_rule_status_api' %}"+rule_id,
+        url: "/rules/api/v1/change_status/"+rule_id, // TODO: how change this to dynamic url?
         method: "GET",
         success: function(){
           if (e.currentTarget.textContent == "Disabled") {
