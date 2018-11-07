@@ -70,13 +70,17 @@ hr {
               {{ finding.solution|linebreaks }}
             </div>
             <div class="row">
+              <b>Raw output</b><br/>
+              <pre>{{finding.raw_data}}</pre>
+            </div>
+            <div class="row">
               <p>
                 <b>See also</b><br/>
                 {% if not finding.links %}
                   No links.
                 {% else %}
                   {% for link in finding.links %}
-                    <a target="_blank" href="{{link}}" style="overflow: break-word;"> {{link}}</a><br/>
+                    <a target="_blank" href="{{link}}" style="overflow-wrap: break-word;"> {{link}}</a><br/>
                   {% endfor %}
                 {% endif %}
               <p>
@@ -376,7 +380,7 @@ hr {
   // Update info
   /*$('button.btn-update-finding').on('click', function(e){
     finding_id = "{{finding.id}}";
-    update_url = "{% url 'update_finding_api' %}"+finding_id+"?severity="+$('#chg_severity').val()+"&status="+$('#chg_status').val()
+    update_url = "{% url 'update_finding_api' finding.id %}?severity="+$('#chg_severity').val()+"&status="+$('#chg_status').val()
     if (qs('raw') == "true") {
       update_url = update_url+"&raw=true";
     }
