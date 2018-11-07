@@ -338,12 +338,12 @@ hr {
 
   // Generate alerts
   $('button.btn-generate-alerts').on('click', function(e){
-    finding_id = "{{finding.id}}";
+    //finding_id = "{{finding.id}}";
     gen_alert_url = ""
     if (qs('raw') == "true") {
-      gen_alert_url = "{% url 'generate_finding_alerts' %}"+finding_id+"?raw=true";
+      gen_alert_url = "{% url 'generate_finding_alerts' finding.id %}?raw=true";
     } else {
-      gen_alert_url = "{% url 'generate_finding_alerts' %}"+finding_id;
+      gen_alert_url = "{% url 'generate_finding_alerts' finding.id %}";
     }
     var request = $.ajax({
       url: gen_alert_url,

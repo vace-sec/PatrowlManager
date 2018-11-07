@@ -841,7 +841,7 @@ div.risk-trends {
     $("button.btn-delete-finding").on('click', function (e) {
       csrf_token = $("div#delete-finding").attr('csrf-token');
       finding_id = $("div#delete-finding").attr('finding-id');
-      delete_finding_url = "{% url 'delete_finding_view' %}"+finding_id;
+      delete_finding_url = "{% url 'delete_findings' %}";
       var request = $.ajax({
         url: delete_finding_url,
         method: "POST",

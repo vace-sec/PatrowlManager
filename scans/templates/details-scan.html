@@ -693,7 +693,7 @@ function toggle(source, element) {
   });
   $('button.btn-update-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    update_url = "{% url 'update_finding_api' %}"+finding_id+"?raw=true&severity="+$('#chg_finding_severity').val()+"&status="+$('#chg_finding_status').val();
+    update_url = "/findings/api/v1/update/"+finding_id+"?raw=true&severity="+$('#chg_finding_severity').val()+"&status="+$('#chg_finding_status').val(); // TODO: how change this to dynamic url
 
     var request = $.ajax({
       url: update_url,
@@ -709,14 +709,14 @@ function toggle(source, element) {
   // Export finding
   $('button.btn-export-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    redir = "{% url 'export_finding_api' %}"+finding_id+"?raw=true&format="+e.target.getAttribute("export-type");
+    redir = "/findings/api/v1/export/"+finding_id+"?raw=true&format="+e.target.getAttribute("export-type"); // TODO: how change this to dynamic url
     window.location = redir;
   });
 
   // Generate alerts
   $('button.btn-alert-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    send_alert_url = "{% url 'send_finding_alerts' %}"+finding_id+"?raw=true&type="+e.target.getAttribute("alert-type");
+    send_alert_url = "/findings/api/v1/alert/"+finding_id+"?raw=true&type="+e.target.getAttribute("alert-type"); // TODO: how change this to dynamic url
     var request = $.ajax({
       url: send_alert_url,
       method: "GET",

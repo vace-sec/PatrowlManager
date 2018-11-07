@@ -92,8 +92,8 @@
     });
     $("button.btn-delete-asset").on('click', function (e) {
       csrf_token = $("div#delete-asset").attr('csrf-token');
-      id = $("div#delete-asset").attr('asset-id');
-      delete_asset_url = "{% url 'delete_asset_view' %}"+id;
+      //id = $("div#delete-asset").attr('asset-id');
+      delete_asset_url = "{% url 'delete_asset_view' asset.id %}";
       var request = $.ajax({
         url: delete_asset_url,
         method: "POST",

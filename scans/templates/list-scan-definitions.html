@@ -196,7 +196,7 @@
     $("button.btn-delete-scan-def").on('click', function (e) {
       csrf_token = $("div#delete-scan-def").attr('csrf-token');
       scan_id = $("div#delete-scan-def").attr('scan-id');
-      delete_scan_def_url = "{% url 'delete_scan_def_view' %}"+scan_id;
+      delete_scan_def_url = "/scans/defs/delete/"+scan_id; // TODO: how change this to dynamic url
       var request = $.ajax({
         url: delete_scan_def_url,
         method: "POST",

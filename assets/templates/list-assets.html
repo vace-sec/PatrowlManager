@@ -371,7 +371,7 @@ function toggle(source, element) {
     $("button.btn-delete-asset").on('click', function (e) {
       csrf_token = $("div#delete-asset").attr('csrf-token');
       id = $("div#delete-asset").attr('asset-id');
-      delete_asset_url = "{% url 'delete_asset_view' %}"+id;
+      delete_asset_url = "/assets/delete/"+id; // TODO: how change this to dynamic url?
       var request = $.ajax({
         url: delete_asset_url,
         method: "POST",
@@ -392,7 +392,7 @@ function toggle(source, element) {
     $("button.btn-delete-asset-group").on('click', function (e) {
       csrf_token = $("div#delete-asset-group").attr('csrf-token');
       id = $("div#delete-asset-group").attr('asset-group-id');
-      delete_asset_group_url = "{% url 'delete_asset_group_view' %}"+id;
+      delete_asset_group_url = "/assets/deletegroup/"+id; // TODO: how change this to dynamic url
       var request = $.ajax({
         url: delete_asset_group_url,
         method: "POST",

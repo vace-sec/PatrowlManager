@@ -48,9 +48,9 @@ urlpatterns = [
     url(r'^api/v1/update_comments/(?P<finding_id>[0-9]+)$', views.update_finding_comments, name='update_finding_comments'),
     # ex: /findings/api/v1/alert/2
     url(r'^api/v1/alert/(?P<finding_id>[0-9]+)$', views.send_finding_alerts, name='send_finding_alerts'),
-    # ex: /findings/api/v1/update?severity=high
+    # ex: /findings/api/v1/update/8?severity=high
     url(r'^api/v1/update/(?P<finding_id>[0-9]+)$', views.update_finding_api, name='update_finding_api'),
-    # ex: /findings/8/export?format=html|csv
+    # ex: /findings/api/v1/export/8?format=html|csv
     url(r'^api/v1/export/(?P<finding_id>[0-9]+)$', views.export_finding_api, name='export_finding_api'),
     # ex: /findings/8
     url(r'^(?P<finding_id>[0-9]+)$', views.get_finding, name='get_finding'),

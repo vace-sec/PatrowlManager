@@ -485,7 +485,7 @@ table tr td.scan-progress {
       }, 2000));
     });
     $("button.btn-run-now").on('click', function(eventObject) {
-      scan_url = "{% url 'run_scan_def' %}"+eventObject.target.getAttribute('scan-id');
+      scan_url = "/scans/defs/run/"+eventObject.target.getAttribute('scan-id'); // TODO: how change this to dynamic url
       var xhr = $.get(scan_url, function(data) {
       })
     });
@@ -500,7 +500,7 @@ table tr td.scan-progress {
     $("button.btn-delete-scan").on('click', function (e) {
       csrf_token = $("div#delete-scan").attr('csrf-token');
       id = $("div#delete-scan").attr('scan-id');
-      delete_scan_url = "{% url 'delete_scans' %}"+id;
+      delete_scan_url = "/scans/delete/"+id; // TODO: how change this to dynamic url?
       var request = $.ajax({
         url: delete_scan_url,
         method: "POST",
@@ -515,7 +515,7 @@ table tr td.scan-progress {
     // Stop scan
     $("button.btn-stop-scan").on('click', function (e) {
       id = e.target.getAttribute('scan-id');
-      stop_scan_url = "{% url 'stop_scan' %}"+id;
+      stop_scan_url = "/scans/stop/"+id; // TODO: how change this to dynamic url?
       var request = $.ajax({
         url: stop_scan_url,
         method: "GET",

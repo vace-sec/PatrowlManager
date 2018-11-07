@@ -86,8 +86,8 @@ $(function() {
   });
   $("button.btn-delete-asset-group").on('click', function (e) {
     csrf_token = $("div#delete-asset-group").attr('csrf-token');
-    id = $("div#delete-asset-group").attr('asset-group-id');
-    delete_asset_group_url = "{% url 'delete_asset_group_view' %}"+id;
+    //id = $("div#delete-asset-group").attr('asset-group-id');
+    delete_asset_group_url = "{% url 'delete_asset_group_view' assetgroup_id %}";
     var request = $.ajax({
       url: delete_asset_group_url,
       method: "POST",

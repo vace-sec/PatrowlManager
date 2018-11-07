@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^campaigns/run/(?P<scan_campaign_id>[0-9]+)$', views.run_scan_campaign, name='run_scan_campaign'),
     # ex: /scans/defs/change_status/33
     url(r'^defs/change_status/(?P<scan_def_id>[0-9]+)$', views.toggle_scan_def_status, name='toggle_scan_def_status'),
-    # ex: /scans/defs/delete/33
+    # ex: /scans/defs/run/33
     url(r'^defs/run/(?P<scan_def_id>[0-9]+)$', views.run_scan_def, name='run_scan_def'),
 
 

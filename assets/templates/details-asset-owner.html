@@ -365,8 +365,8 @@
       $("button.btn-delete-contact").on('click', function (e) {
         csrf_token = $("div#delete-contact-info").attr('csrf-token');
         contact_id = $("div#delete-contact-info").attr('contact-id');
-        owner_id = $("div[owner-id]").attr('owner-id');
-        delete_contact_url = "{% url 'delete_asset_owner_contact' %}"+contact_id;
+        //owner_id = $("div[owner-id]").attr('owner-id');
+        delete_contact_url = "{% url 'delete_asset_owner_contact' owner.id %}";
         var request = $.ajax({
           url: delete_contact_url,
           method: "POST",
@@ -387,8 +387,8 @@
       $("button.btn-delete-document").on('click', function (e) {
         csrf_token = $("div#delete-document-info").attr('csrf-token');
         doc_id = $("div#delete-document-info").attr('doc-id');
-        owner_id = $("div[owner-id]").attr('owner-id');
-        delete_doc_url = "{% url 'delete_asset_owner_document' %}"+owner_id;
+        //owner_id = $("div[owner-id]").attr('owner-id');
+        delete_doc_url = "{% url 'delete_asset_owner_document' owner.id %}";
         var request = $.ajax({
           url: delete_doc_url,
           method: "POST",
