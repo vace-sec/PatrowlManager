@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/assets/delete/{{ asset.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'delete_asset_view' asset.id %}" method="post" class="form-horizontal">
 
     <legend>Do you confirm the deletion?</legend>
     {% csrf_token %}
@@ -10,7 +10,7 @@
     <p>Addr: {{ asset.value }}</p>
     <div class="form-group">
       <button type="submit" class="btn btn-warning">Delete</button>
-      <button class="btn btn-primary"><a href="/assets/list">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'list_assets_view' %}">Cancel</a></button>
     </div>
   </form>
 

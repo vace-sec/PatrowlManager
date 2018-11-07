@@ -2,12 +2,26 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/findings/list">findings</a></li>
+  <li><a href="{% url 'list_findings_view' %}">findings</a></li>
   <li class="active">add new</li>
 </ul>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    tagsinput_input = $('div.bootstrap-tagsinput')
+    tagsinput_input.tagsinput('removeAll');
+    if "{{ finding.tags }}" != "None" {
+      tags = "{{ finding.tags }}".replace(/u&#39;/g, "").replace(/&#39;/g, "").replace('[', '').replace(']', '').split(',');
+      for (var i = 0; i < tags.length; i++) {
+        tagsinput_input.tagsinput('add', tags[i]);
+      }
+    }
+  })
+</script>
+
+
 <div class="container">
-  <form action="/findings/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_finding_view' %}" method="post" class="form-horizontal">
     <legend>Add a new finding</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -37,7 +51,7 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-4">
           <input type="submit" class="btn btn-primary" value="Add Finding">
-          <a href="/findings/list"><button class="btn btn-primary">Cancel</button></a>
+          <a href="{% url 'list_findings_view' %}"><button class="btn btn-primary">Cancel</button></a>
         </div>
       </div>
   </form>

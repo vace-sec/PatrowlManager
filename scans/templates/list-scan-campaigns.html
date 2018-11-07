@@ -18,8 +18,8 @@
 </style>
 
 <ul class="breadcrumb">
-  <li><a href="/scans/list">scans</a></li>
-  <li><a href="/scans/campaigns/list">scans</a></li>
+  <li><a href="{% url 'list_scans_view' %}">scans</a></li>
+  <li><a href="{% url 'list_scan_campaigns_view' %}">scans</a></li>
   <li class="active">list</li>
 </ul>
 
@@ -44,9 +44,9 @@
         {% endif %}
         <td>{{ scan_campaign.updated_at|date:"Y/m/d-H:m:s" }}</td>
         <td>
-          <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/scans/campaigns/edit/{{ scan_campaign.scan_campaign_id }}'">
+          <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_scan_campaign_view' scan_campaign.scan_campaign_id %}'">
             <span class="glyphicon glyphicon-edit"></span></button>
-          <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/scans/campaigns/delete/{{ scan_campaign.scan_campaign_id }}'">
+          <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'delete_scan_campaign_view' scan_campaign.scan_campaign_id %}'">
             <span class="glyphicon glyphicon-remove"></button>
           {% if scan_campaign.scan_type == "periodic" %}
             {% if scan_campaign.enabled %}
@@ -65,7 +65,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <a href="/scans/campaigns/add">+ Add a new scan campaign</a><br/>
+  <a href="{% url 'add_scan_campaign_view' %}">+ Add a new scan campaign</a><br/>
 
   {% if messages %}
   <ul class="messages">
@@ -95,7 +95,7 @@
       })
 
       if (scans_to_delete.length != 0){
-        delete_url="/scans/campaigns/delete"
+        delete_url="/scans/campaigns/delete" // TODO: There is no api url for this action
         var request = $.ajax({
           url: delete_url,
           method: "POST",
@@ -110,7 +110,7 @@
 
     $("button.btn-run-now").on('click', function(eventObject) {
       scan_id = eventObject.target.getAttribute('scan-id')
-      scan_url = "/scans/campaigns/run/"+scan_id
+      scan_url = "{% url 'run_scan_campaign' %}"+scan_id
       console.log(scan_url)
       var xhr = $.get( scan_url, function(data) {
         location.reload()
@@ -128,7 +128,7 @@
 
     $("button.btn-change-status").on('click', function(eventObject) {
       scan_id = eventObject.target.getAttribute('scan-id')
-      scan_url = "/scans/campaigns/change_status/"+scan_id
+      scan_url = "{% url 'toggle_scan_def_status' %}"+scan_id
       console.log(scan_url)
       var xhr = $.get( scan_url, function(data) {
         location.reload()

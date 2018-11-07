@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/scans/defs/delete/{{ scan_def.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'delete_scan_def_view' scan_def.id %}" method="post" class="form-horizontal">
 
     <legend>Do you confirm the deletion?</legend>
     {% csrf_token %}
@@ -10,7 +10,7 @@
     <p>Title: {{ scan_def.title }}</p>
     <div class="form-group">
       <button type="submit" class="btn btn-warning">Delete</button>
-      <button class="btn btn-primary"><a href="/scans/defs/list">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'list_scan_def_view' %}">Cancel</a></button>
     </div>
   </form>
 

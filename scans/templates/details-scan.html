@@ -78,7 +78,7 @@ function toggle(source, element) {
 </script>
 
 <ul class="breadcrumb">
-  <li><a href="/scans/list">scans</a></li>
+  <li><a href="{% url 'list_scans_view' %}">scans</a></li>
   <li class="active">{{ scan.title }} [<a href="javascript:goBack()">back</a>]</li>
 </ul>
 
@@ -124,7 +124,7 @@ function toggle(source, element) {
             <tbody>
             {% for asset in assets|sort_by:"criticity,value" %}
             <tr>
-            <!-- <tr class='dblclickable-row' data-href='/findings/details/{{finding.id}}?raw=true'> -->
+            <!-- <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}?raw=true'> -->
               <td>{{ asset.value|truncatechars:35 }}</td>
               <td>{{ asset.type }}</td>
               {% if asset.criticity == 'low' %}
@@ -256,7 +256,7 @@ function toggle(source, element) {
             </thead>
             <tbody>
             {% for finding in findings %}
-            <tr class='dblclickable-row' data-href='/findings/details/{{finding.id}}?raw=true'>
+            <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}?raw=true'>
               <td><input type="checkbox" class="radio" name="finding" value="{{ finding.id }}"/></td>
               <td>{{ finding.asset_name|truncatechars:30 }}</td>
               <td>{{ finding.title|truncatechars:80 }}</td>
@@ -396,40 +396,40 @@ function toggle(source, element) {
       <b>Scan details</b> <small>(ID={{ scan.id }})</small>
       <hr class="my-1">
       <dl class="dl-horizontal">
-        <dt>Title:</dt><dd><a href="/scans/defs/details/{{scan.scan_definition.id}}">{{ scan.title }}</a></dd>
+        <dt>Title:</dt><dd><a href="{% url 'detail_scan_def_view' scan.scan_definition.id %}">{{ scan.title }}</a></dd>
         <!-- <dt>Scan ID:</dt><dd>{{ scan.id }}</dd> -->
         <dt>Assets:</dt><dd>
           {% if assetgroups|length > 0 %}
             {% for ag in assetgroups %}
               {% for a in ag.assets.all %}
-                <a href="/assets/details/{{a.id}}">{{a.value}}</a>{% if not forloop.last %},{% endif %}
+                <a href="{% url 'detail_asset_view' a.id %}">{{a.value}}</a>{% if not forloop.last %},{% endif %}
               {% endfor %}<br/>
             {% endfor %}
           {% endif %}
           {% for a in other_assets %}
-            <a href="/assets/details/{{a.id}}">{{a.value|truncatechars:30}}</a>{% if not forloop.last %},{% endif %}
+            <a href="{% url 'detail_asset_view' a.id %}">{{a.value|truncatechars:30}}</a>{% if not forloop.last %},{% endif %}
           {% endfor %}
         </dd>
         <dt>Engine:</dt><dd>{{ scan.engine.name }} ({{ scan.engine_type.name }})</dd>
         <dt>Status:</dt><dd>
           {% if scan.status == "finished" %}
             <span class="label label-success">Finished</span>
-            <a href="/scans/defs/run/{{scan.scan_definition.id}}"><span class="label label-warning">Re-run !</span></a>
+            <a href="{% url 'run_scan_def' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
           {% elif scan.status == "error" %}
             <span class="label label-danger">Error</span>
-            <a href="/scans/defs/run/{{scan.scan_definition.id}}"><span class="label label-warning">Re-run !</span></a>
+            <a href="{% url 'run_scan_def' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
           {% else %}
             <span class="label label-warning">{{ scan.status|capfirst }}</span>
           {% endif %}
         </dd>
-        <dt>Policy:</dt><dd><a href="/engines/policies/edit/{{scan.engine_policy.id}}">{{ scan.engine_policy.name }}</a></dd>
+        <dt>Policy:</dt><dd><a href="{% url 'edit_policy_view' scan.engine_policy.id %}">{{ scan.engine_policy.name }}</a></dd>
         <dt>Started at:</dt><dd>{{ scan.started_at|date:"Y/m/d-H:m:s" }}</dd>
         <dt>Finished at:</dt><dd>{{ scan.finished_at|date:"Y/m/d-H:m:s" }}</dd>
         <dt>Elaspsed:</dt><dd>{{ scan.finished_at|get_time_diff:scan.started_at }}</dd>
         <dt>Reports:</dt><dd>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='/scans/report/json/{{ scan.id }}'">json</button>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='/scans/report/csv/{{ scan.id }}'">csv</button>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='/scans/report/html/{{ scan.id }}'">html</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_json' scan.id %}'">json</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_csv' scan.id %}'">csv</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_html' scan.id %}'">html</button>
           <button type="button" class="btn btn-default btn-xs" onclick="location.href='#'">raw</button>
         </dd>
       </dl>
@@ -620,7 +620,7 @@ function toggle(source, element) {
   });
 
   // Show graph in the sidebar
-  getfindings_severities_url = "/findings/api/v1/stats?scope=scan&scan_id={{scan.id}}";
+  getfindings_severities_url = "{% url 'get_findings_stats' %}?scope=scan&scan_id={{scan.id}}";
   chart_fs_config = {
     type: 'doughnut',
     data: {
@@ -681,7 +681,7 @@ function toggle(source, element) {
   $('#scan-quick-search').keyup(function(e) {
     if(e.which == 13) { // Enter Key
       window.location.hash = "";
-      window.location = "/scans/details/{{scan.id}}?search="+e.target.value;
+      window.location = "{% url 'detail_scan_view' scan.id %}?search="+e.target.value;
     }
     else if (e.which == 27) { e.target.value = ""; } // Escape Key
   });
@@ -693,7 +693,7 @@ function toggle(source, element) {
   });
   $('button.btn-update-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    update_url = "/findings/api/v1/update/"+finding_id+"?raw=true&severity="+$('#chg_finding_severity').val()+"&status="+$('#chg_finding_status').val();
+    update_url = "{% url 'update_finding_api' %}"+finding_id+"?raw=true&severity="+$('#chg_finding_severity').val()+"&status="+$('#chg_finding_status').val();
 
     var request = $.ajax({
       url: update_url,
@@ -709,14 +709,14 @@ function toggle(source, element) {
   // Export finding
   $('button.btn-export-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    redir = "/findings/api/v1/export/"+finding_id+"?raw=true&format="+e.target.getAttribute("export-type");
+    redir = "{% url 'export_finding_api' %}"+finding_id+"?raw=true&format="+e.target.getAttribute("export-type");
     window.location = redir;
   });
 
   // Generate alerts
   $('button.btn-alert-finding').on('click', function(e){
     finding_id = $("div#modal-finding-update").attr('finding-id');
-    send_alert_url = "/findings/api/v1/alert/"+finding_id+"?raw=true&type="+e.target.getAttribute("alert-type");
+    send_alert_url = "{% url 'send_finding_alerts' %}"+finding_id+"?raw=true&type="+e.target.getAttribute("alert-type");
     var request = $.ajax({
       url: send_alert_url,
       method: "GET",
@@ -740,7 +740,7 @@ function toggle(source, element) {
     })
 
     if (findings_to_delete.length != 0){
-      delete_url="/findings/rdelete";
+      delete_url="{% url 'delete_rawfindings' %}";
       var request = $.ajax({
         url: delete_url,
         method: "POST",
@@ -763,7 +763,7 @@ function toggle(source, element) {
     })
 
     if (findings_to_ack.length != 0){
-      ack_url="/findings/rstatus";
+      ack_url="{% url 'change_rawfindings_status' %}";
       var request = $.ajax({
         url: ack_url,
         method: "POST",
@@ -789,7 +789,7 @@ function toggle(source, element) {
     });
     if(findings_to_compare.length == 2){
       location.hash = "#findings";
-      window.location.href ="/findings/compare?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
+      window.location.href ="{% url 'compare_rawfindings_view' %}?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
     }
   });
 

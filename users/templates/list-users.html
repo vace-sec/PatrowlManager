@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/settings/users/list">users</a></li>
+  <li><a href="{% url 'show_settings_menu' %}#">users</a></li>
   <li class="active">list</li>
 </ul>
 
@@ -20,7 +20,7 @@
     </thead>
     <tbody>
     {% for user in users %}
-    <tr class='dblclickable-row' data-href='/admin/auth/user/{{ user.id }}/change/'>
+    <tr class='dblclickable-row' data-href='{% url 'admin:app_user_change' user.id %}'>
       <td>{{ user.username }}</td>
       <td>
         {% if user.profile.status == 'ACTIVE' %}
@@ -57,22 +57,22 @@
                   <dt>Created at</dt><dd>{{user.date_joined}}</dd>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-warning btn-xs" data-dismiss="modal" onclick="location.href='/admin/auth/user/{{ user.id }}/change/'">Edit</button>
+                <button type="button" class="btn btn-warning btn-xs" data-dismiss="modal" onclick="location.href='{% url 'admin:app_user_change' user.id %}'">Edit</button>
                 <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-default btn-xs" onclick="location.href='/admin/auth/user/{{ user.id }}/change/'">
+        <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url 'admin:app_user_change' user.id %}'">
           <span class="glyphicon glyphicon-edit"></span></button>
-        <button type="button" class="btn btn-danger btn-xs" onclick="location.href='/admin/auth/user/{{ user.id }}/delete/'">
+        <button type="button" class="btn btn-danger btn-xs" onclick="location.href='{% url 'admin:app_user_delete' user.id %}'">
           <span class="glyphicon glyphicon-remove"></span></button>
       </td>
     </tr>
   {% endfor %}
   </tbody>
   </table>
-  <a href="/users/add">+ Add a new user</a>
+  <a href="{% url 'add_user_view' %}">+ Add a new user</a>
 
   {% if messages %}
   <ul class="messages">

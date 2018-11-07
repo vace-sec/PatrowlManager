@@ -32,8 +32,8 @@
   <link href="{% static 'css/jquery.dataTables.min.css' %}" rel="stylesheet">
 
   <!-- DateTime picker -->
-  <link href="/static/css/datetimepicker.css" type="text/css" media="all" rel="stylesheet" />
-  <script type="text/javascript" src="/static/js/bootstrap-datetimepicker.js"></script>
+  <link href="{% static 'css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet" />
+  <script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
 
   <!-- Typeahead jQuery plugin -->
   <script src="{% static 'js/typeahead/typeahead.bundle.min.js' %}"></script>
@@ -46,7 +46,7 @@
   <link href="{% static 'css/bootstrap-tagsinput.css' %}" rel="stylesheet">
 
   <!-- Admin -->
-  <script type="text/javascript" src="/admin/jsi18n/"></script>
+  <!-- <script type="text/javascript" src="/admin/jsi18n/"></script>
   <script type="text/javascript" src="/static/admin/js/core.js"></script>
   <script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
   <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
@@ -56,7 +56,7 @@
   <script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
   <script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
   <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
-  <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+  <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script> -->
 
   <script>
     function goBack() {
@@ -86,7 +86,7 @@
 
 
       $("#engines_status_label").dblclick(function(){
-        window.location = "/engines/list"
+        window.location = "{% url 'list_engines_view' %}"
       });
 
     });
@@ -99,7 +99,7 @@
       $('span.engine-status').empty();
       $('span.running-scans').empty();
       //$('span.engine-status').append("");
-      var xhr = $.get("/engines/api/v1/list", function(response) {
+      var xhr = $.get("{% url 'list_engines_api' %}", function(response) {
         engines_json = response.engines;
         for (var engine_id in engines_json) {
           engine = engines_json[engine_id];
@@ -257,7 +257,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/dashboard">PatrOwl Manager</a>
+        <a class="navbar-brand" href="{% url 'homepage_dashboard_view' %}">PatrOwl Manager</a>
       </div>
       <ul class="nav navbar-nav">
         {% if user.is_authenticated %}
@@ -268,18 +268,18 @@
             <span class="glyphicon glyphicon-cloud"></span> Assets<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/assets/list">List assets</a></li>
-            <li><a href="/assets/add">+ Add new asset</a></li>
-            <li><a href="/assets/bulkadd">+ Add new assets in bulk (CSV file)</a></li>
+            <li><a href="{% url 'list_assets_view' %}">List assets</a></li>
+            <li><a href="{% url 'add_asset_view' %}">+ Add new asset</a></li>
+            <li><a href="{% url 'bulkadd_asset_view' %}">+ Add new assets in bulk (CSV file)</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="/assets/list?target=asset_group">List asset groups</a></li>
-            <li><a href="/assets/addgroup">+ Add new group of assets</a></li>
+            <li><a href="{% url 'list_assets_view' %}?target=asset_group">List asset groups</a></li>
+            <li><a href="{% url 'add_asset_group_view' %}">+ Add new group of assets</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="/assets/owners/list">List asset owners</a></li>
-            <li><a href="/assets/owners/add">+ Add new asset owner</a></li>
+            <li><a href="{% url 'list_asset_owners_view' %}">List asset owners</a></li>
+            <li><a href="{% url 'add_asset_owner_view' %}">+ Add new asset owner</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="/admin/assets/assetcategory/">List categories (Admin only)</a></li>
-            <li><a href="/admin/assets/assetcategory/add/">+ Add new category (Admin only)</a></li>
+            <li><a href="{% url 'admin:app_assetcategory_changelist' %}">List categories (Admin only)</a></li>
+            <li><a href="{% url 'admin:app_assetcategory_add' %}">+ Add new category (Admin only)</a></li>
           </ul>
         </li>
 
@@ -289,9 +289,9 @@
             <span class="glyphicon glyphicon-map-marker"></span> Findings<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/findings/list">List</a></li>
-            <li><a href="/findings/import">Manual import</a></li>
-            <li><a href="/findings/add">+ Add finding</a></li>
+            <li><a href="{% url 'list_findings_view' %}">List</a></li>
+            <li><a href="{% url 'import_findings_view' %}">Manual import</a></li>
+            <li><a href="{% url 'add_finding_view' %}">+ Add finding</a></li>
             <!-- <li><a href="/findings/export">Export</a></li> -->
           </ul>
         </li>
@@ -302,14 +302,14 @@
             <span class="glyphicon glyphicon-search"></span> Scans<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/scans/list">List scans performed</a></li>
-            <!-- <li><a href="/scans/compare">Compare scans</a></li> -->
+            <li><a href="{% url 'list_scans_view' %}">List scans performed</a></li>
+            <!-- <li><a href="{% url 'compare_scans_view' %}">Compare scans</a></li> -->
             <li role="separator" class="divider"></li>
-            <li><a href="/scans/defs/list">List scans definitions</a></li>
-            <li><a href="/scans/defs/add">+ Add new scan</a></li>
+            <li><a href="{% url 'list_scan_def_view' %}">List scans definitions</a></li>
+            <li><a href="{% url 'add_scan_def_view' %}">+ Add new scan</a></li>
             <!-- <li role="separator" class="divider"></li>
-            <li><a href="/scans/campaigns/list">List scan campaigns</a></li>
-            <li><a href="/scans/campaigns/add">+ Add scan Campaign</a></li> -->
+            <li><a href="{% url 'list_scan_campaigns_view' %}">List scan campaigns</a></li>
+            <li><a href="{% url 'add_scan_campaign_view' %}">+ Add scan Campaign</a></li> -->
           </ul>
         </li>
 
@@ -320,22 +320,22 @@
           </a>
           <ul class="dropdown-menu">
             <li class="dropdown-submenu" >
-              <a href="/engines/list"><strong>Scan Engines</strong></a>
-              <li><a href="/engines/list">List engines</a></li>
-              <li><a href="/engines/add">+ Add scan engine instance</a></li>
+              <a href="{% url 'list_engines_view' %}"><strong>Scan Engines</strong></a>
+              <li><a href="{% url 'list_engines_view' %}">List engines</a></li>
+              <li><a href="{% url 'add_engine_view' %}">+ Add scan engine instance</a></li>
             </li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-submenu" >
-              <a href="/engines/policies/list"><strong>Scan Engines Policies</strong></a>
-              <li><a href="/engines/policies/list">List policies</a></li>
-              <li><a href="/engines/policies/add">+ Add policy</a></li>
-              <li><a href="/engines/policies/import">* Import policies</a></li>
+              <a href="{% url 'list_policies_view' %}"><strong>Scan Engines Policies</strong></a>
+              <li><a href="{% url 'list_policies_view' %}">List policies</a></li>
+              <li><a href="{% url 'add_policy_view' %}">+ Add policy</a></li>
+              <li><a href="{% url 'import_policies_view' %}">* Import policies</a></li>
             </li>
             <li role="separator" class="divider"></li>
             <li class="dropdown-submenu">
-              <a href="/engines/types/list"><strong>Scan Engine Types</strong></a>
-              <li><a href="/engines/types/list">List types</a></li>
-              <li><a href="/engines/types/add">+ Add engine type</a></li>
+              <a href="{% url 'list_engine_types_view' %}"><strong>Scan Engine Types</strong></a>
+              <li><a href="{% url 'list_engine_types_view' %}">List types</a></li>
+              <li><a href="{% url 'add_engine_types_view' %}">+ Add engine type</a></li>
             </li>
           </ul>
         </li>
@@ -357,7 +357,7 @@
             <span class="glyphicon glyphicon-bell"></span> Rules<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/rules/list">List rules</a></li>
+            <li><a href="{% url 'list_rules_view' %}">List rules</a></li>
             <!-- <li><a href="/rules/add">Add new rule</a></li> -->
           </ul>
         </li>
@@ -368,10 +368,10 @@
             <span class="glyphicon glyphicon-wrench"></span> Settings<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/settings/">Global settings</a></li>
-            <li><a href="/settings/">Updates</a></li>
-            <li><a href="/settings/">Users</a></li>
-            <li><a href="/settings/">Events</a></li>
+            <li><a href="{% url 'show_settings_menu' %}">Global settings</a></li>
+            <li><a href="{% url 'show_settings_menu' %}">Updates</a></li>
+            <li><a href="{% url 'show_settings_menu' %}">Users</a></li>
+            <li><a href="{% url 'show_settings_menu' %}">Events</a></li>
           </ul>
         </li> -->
       </ul>
@@ -394,14 +394,14 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="/home">Homepage</a></li>
-              <li><a href="/dashboard">Dashboards</a></li>
-              <li><a href="/settings/"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
+              <li><a href="{% url 'home' %}">Homepage</a></li>
+              <li><a href="{% url 'homepage_dashboard_view' %}">Dashboards</a></li>
+              <li><a href="{% url 'show_settings_menu' %}"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
 
               <li class="divider"></li>
-              <li><a href="/users/details">My account</a></li>
-              <li><a href="/users/changepwd">{% trans "Change password" %}</a></li>
-              <li><a href="/logout">Logout</a></li>
+              <li><a href="{% url 'user_details_view' %}">My account</a></li>
+              <li><a href="{% url 'admin:auth_user_password_change' user.id %}">{% trans "Change password" %}</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -409,8 +409,8 @@
       {% else %}
       <!-- <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2"> -->
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> {% trans "Sign up" %}</a></li>
-          <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a></li>
+          <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span> {% trans "Sign up" %}</a></li>
+          <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> {% trans "Login" %}</a></li>
         </ul>
       </div>
       {% endif %}

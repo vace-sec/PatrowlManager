@@ -72,7 +72,7 @@ table tr td.scan-progress {
 }
 </style>
 <ul class="breadcrumb">
-  <li><a href="/scans/list">scans</a></li>
+  <li><a href="{% url 'list_scans_view' %}">scans</a></li>
   <li class="active">scans performed [<a href="javascript:goBack()">back</a>]</li>
 </ul>
 
@@ -113,10 +113,10 @@ table tr td.scan-progress {
     </thead>
     <tbody>
     {% for scan in scans %}
-      <tr class='dblclickable-row' data-href='/scans/details/{{scan.id}}'>
+      <tr class='dblclickable-row' data-href='{% url 'detail_scan_view' scan.id %}'>
         <td><input type="checkbox" class="radio" name="scan" value="{{ scan.id }}"/></td>
         <td>[{{ scan.engine_type }}] {{ scan.title }}</td>
-        <!-- <td><a href="/scans/defs/details/{{scan.scan_definition.id}}">[{{ scan.engine_type }}] {{ scan.title }}</a></td> -->
+        <!-- <td><a href="{% url 'detail_scan_def_view' scan.scan_definition.id %}">[{{ scan.engine_type }}] {{ scan.title }}</a></td> -->
         {% if scan.status == "started" %}
         <td class="text-center"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="color:orange" title="Started"></span></td>
         {% elif scan.status == "stopping"  %}
@@ -163,13 +163,13 @@ table tr td.scan-progress {
         </td>
         <td>{{ scan.updated_at|smartdate }}</td>
         <td>
-          <button type="button" class="btn btn-default btn-xs" title="Details" onclick="location.href='/scans/details/{{ scan.id }}'">
+          <button type="button" class="btn btn-default btn-xs" title="Details" onclick="location.href='{% url 'detail_scan_view' scan.id %}'">
             details</button>
           {% if scan.status == "enqueued" or scan.status == "started" %}
           <button type="button" class="btn btn-danger btn-xs btn-stop-scan" title="Stop scan" scan-id="{{ scan.id }}">
             <span class="glyphicon glyphicon-stop" scan-id="{{ scan.id }}"></span></button>
           {% else %}
-          <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='/scans/report/html/{{ scan.id }}'">
+          <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='{% url 'get_scan_report_html' scan.id %}'">
             <span class="glyphicon glyphicon-share"></span></button>
           {% endif %}
           <button type="button" class="btn btn-warning btn-xs btn-run-now" scan-id="{{ scan.scan_definition.id }}" scan-title="{{ scan.title }}" data-toggle="modal" data-target="#modal-run-scan">
@@ -337,7 +337,7 @@ table tr td.scan-progress {
   date_cursor.setDate(date_cursor.getDate() - range_size + 2); // - 20days
   cal.init({
     id: "cal-heatmap",
-    data: "/scans/api/v1/list",
+    data: "{% url 'get_scans_heatmap' %}",
     itemSelector: "#cal-heatmap",
     domain: "day",
     subDomain: "hour",
@@ -361,13 +361,13 @@ table tr td.scan-progress {
 
       tzoffset = (new Date()).getTimezoneOffset() * 60000;
       date_tz = (new Date(date - tzoffset)).toISOString().split('.')[0]+"Z"
-      scan_url = "/scans/api/v1/listbydate?date=" + date_tz + "&scope=hour"
+      scan_url = "{% url 'get_scans_by_date' %}?date=" + date_tz + "&scope=hour"
 
       xhr = $.get(scan_url, function(data) {
         for (i = 0; i < data.length; ++i){
-          scan_row_html = "<tr class='dblclickable-row' data-href='/scans/details/"+data[i]["scan_id"]+"'>\
+          scan_row_html = "<tr class='dblclickable-row' data-href='{% url 'detail_scan_view' %}"+data[i]["scan_id"]+"'>\
             <td><input type='checkbox' class='radio' name='scan' value='"+data[i]["scan_id"]+"'/></td>\
-            <td><a href='/scans/details/"+data[i]["scan_id"]+"'>["+data[i]["engine_type"]+"] "+data[i]["title"]+"</a></td>"
+            <td><a href='{% url 'detail_scan_view' %}"+data[i]["scan_id"]+"'>["+data[i]["engine_type"]+"] "+data[i]["title"]+"</a></td>"
             //<td><a href='/scans/defs/details/"+data[i]["scan_definition_id"]+"'>["+data[i]["engine_type"]+"] "+data[i]["title"]+"</a></td>"
 
           if (data[i]["status"] == "started"){
@@ -405,8 +405,8 @@ table tr td.scan-progress {
             <td>"+data[i]["updated_at"]+"</td>"
           scan_row_html += "\
             <td>\
-            <button type='button' class='btn btn-default btn-xs' title='Details' onclick='location.href=\"/scans/details/"+data[i]["scan_id"]+"\"'>details</button>\
-              <button type='button' class='btn btn-default btn-xs' title='Export scan findings' onclick='location.href=\"/scans/report/html/"+data[i]["scan_id"]+"\"'>\
+            <button type='button' class='btn btn-default btn-xs' title='Details' onclick='location.href=\"{% url 'detail_scan_view' %}"+data[i]["scan_id"]+"\"'>details</button>\
+              <button type='button' class='btn btn-default btn-xs' title='Export scan findings' onclick='location.href=\"{% url 'get_scan_report_html' %}"+data[i]["scan_id"]+"\"'>\
                 <span class='glyphicon glyphicon-share'></span></button>\
               <button type='button' class='btn btn-warning btn-xs btn-run-now' scan-id='"+data[i]["scan_definition_id"]+"' scan-title='"+data[i]["title"]+"' data-toggle='modal' data-target='#modal-run-scan'>\
                 Run </button>\
@@ -485,7 +485,7 @@ table tr td.scan-progress {
       }, 2000));
     });
     $("button.btn-run-now").on('click', function(eventObject) {
-      scan_url = "/scans/defs/run/"+eventObject.target.getAttribute('scan-id');
+      scan_url = "{% url 'run_scan_def' %}"+eventObject.target.getAttribute('scan-id');
       var xhr = $.get(scan_url, function(data) {
       })
     });
@@ -500,7 +500,7 @@ table tr td.scan-progress {
     $("button.btn-delete-scan").on('click', function (e) {
       csrf_token = $("div#delete-scan").attr('csrf-token');
       id = $("div#delete-scan").attr('scan-id');
-      delete_scan_url = "/scans/delete/"+id;
+      delete_scan_url = "{% url 'delete_scans' %}"+id;
       var request = $.ajax({
         url: delete_scan_url,
         method: "POST",
@@ -515,7 +515,7 @@ table tr td.scan-progress {
     // Stop scan
     $("button.btn-stop-scan").on('click', function (e) {
       id = e.target.getAttribute('scan-id');
-      stop_scan_url = "/scans/stop/"+id;
+      stop_scan_url = "{% url 'stop_scan' %}"+id;
       var request = $.ajax({
         url: stop_scan_url,
         method: "GET",
@@ -535,7 +535,7 @@ table tr td.scan-progress {
       })
 
       if (scans_to_delete.length != 0){
-        delete_url="/scans/delete"
+        delete_url="{% url 'delete_scans' %}"
         var request = $.ajax({
           url: delete_url,
           method: "POST",
@@ -557,7 +557,7 @@ table tr td.scan-progress {
         }
       });
       if(scans_to_compare.length == 2){
-        window.location.href ="/scans/compare?scan_a_id="+scans_to_compare[0]+"&scan_b_id="+scans_to_compare[1];
+        window.location.href ="{% url 'compare_scans_view' %}?scan_a_id="+scans_to_compare[0]+"&scan_b_id="+scans_to_compare[1];
       }
     });
 

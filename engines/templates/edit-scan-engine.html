@@ -2,12 +2,12 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/list">engines</a></li>
+  <li><a href="{% url 'list_engines_view' %}">engines</a></li>
   <li class="active">edit engine instance</li>
 </ul>
 
 <div class="container">
-  <form action="/engines/edit/{{ engine_id }}" method="post" class="form-horizontal">
+  <form action="{% url 'edit_engine_view' engine_id %}" method="post" class="form-horizontal">
     <legend>Edit an engine instance</legend>
       {% csrf_token %}
       {% for field in form %}

@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/list">engines</a></li>
+  <li><a href="{% url 'list_engines_view' %}">engines</a></li>
   <li class="active">policies</li>
 </ul>
 
@@ -54,11 +54,11 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/policies/duplicate/{{ policy.id }}'">
+        <button type="button" class="btn btn-default dropdown-toggle btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'duplicate_policy_view' policy.id %}'">
           <span class="glyphicon glyphicon-duplicate"></span></button>
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/policies/edit/{{ policy.id }}'">
+        <button type="button" class="btn btn-default dropdown-toggle btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_policy_view' policy.id %}'">
           <span class="glyphicon glyphicon-edit"></span></button>
-        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/policies/export/{{ policy.id }}'">
+        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'export_policy' policy.id %}'">
           <span class="glyphicon glyphicon-share"></span></button>
         <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete-policy"
            policy-id="{{ policy.id }}" policy-name="{{ policy.name }}">
@@ -68,9 +68,9 @@
   {% endfor %}
   </tbody>
   </table>
-  <a href="/engines/policies/add">+ Add a new policy</a><br/>
-  <a class="text-warning btn-export-selected" href="#">* Export selected policies</a> or <a href="/engines/policies/export?all=true" class="text-warning">* Export all policies</a><br/>
-  <a href="/engines/policies/import" class="text-danger"># Import policies</a><br/>
+  <a href="{% url 'add_policy_view' %}">+ Add a new policy</a><br/>
+  <a class="text-warning btn-export-selected" href="#">* Export selected policies</a> or <a href="{% url 'export_policies' %}?all=true" class="text-warning">* Export all policies</a><br/>
+  <a href="{% url 'import_policies_view' %}" class="text-danger"># Import policies</a><br/>
 
   {% if messages %}
   <ul class="messages">
@@ -130,7 +130,7 @@
       });
 
       if (policies_to_export.length != 0){
-        export_url="/engines/policies/export"
+        export_url="{% url 'export_policies' %}"
         var request = $.ajax({
           url: export_url,
           method: "POST",
@@ -157,7 +157,7 @@
     $("button.btn-delete-policy").on('click', function (e) {
       csrf_token = $("div#delete-policy").attr('csrf-token');
       policy_id = $("div#delete-policy").attr('policy-id');
-      delete_policy_url = "/engines/policies/delete/"+policy_id;
+      delete_policy_url = "{% url 'delete_policy_view' %}"+policy_id;
       var request = $.ajax({
         url: delete_policy_url,
         method: "POST",

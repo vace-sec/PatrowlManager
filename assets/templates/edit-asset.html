@@ -2,13 +2,13 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/assets/list">assets</a></li>
-  <li><a href="/assets/details/{{asset.id}}">{{asset.value}}</a></li>
+  <li><a href="{% url 'list_assets_view' %}">assets</a></li>
+  <li><a href="{% url 'detail_asset_view' asset.id %}">{{asset.value}}</a></li>
   <li class="active">edit</a></li>
 </ul>
 
 <div class="container">
-  <form action="/assets/edit/{{ asset.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'edit_asset_view' asset.id %}" method="post" class="form-horizontal">
     <legend>Edit an asset</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -93,13 +93,13 @@
     $("button.btn-delete-asset").on('click', function (e) {
       csrf_token = $("div#delete-asset").attr('csrf-token');
       id = $("div#delete-asset").attr('asset-id');
-      delete_asset_url = "/assets/delete/"+id;
+      delete_asset_url = "{% url 'delete_asset_view' %}"+id;
       var request = $.ajax({
         url: delete_asset_url,
         method: "POST",
         data: "csrfmiddlewaretoken="+csrf_token,
         success: function(){
-          window.location = "/assets/list";
+          window.location = "{% url 'list_assets_view' %}";
         }
       });
     });

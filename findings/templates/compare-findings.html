@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/findings/list">findings</a></li>
+  <li><a href="{% url 'list_findings_view' %}">findings</a></li>
   <li class="active">compare [<a href="javascript:goBack()">back</a>]</li>
 </ul>
 
@@ -12,8 +12,8 @@
     <thead>
       <tr>
         <th></th>
-        <th><a href="/findings/details/{{finding_a.id}}">Finding A (ID: {{finding_a.id}})</a></th>
-        <th><a href="/findings/details/{{finding_a.id}}">Finding B (ID: {{finding_b.id}})</a></th>
+        <th><a href="{% url 'details_finding_view' finding_a.id %}">Finding A (ID: {{finding_a.id}})</a></th>
+        <th><a href="{% url 'details_finding_view' finding_b.id %}">Finding B (ID: {{finding_b.id}})</a></th>
       </tr>
     </thead>
     <tbody>
@@ -174,8 +174,8 @@
       <tr>
       {% endif %}
         <td><b>Scan title</b></td>
-        <td>{{ finding_a.scan.title }} <a href="/scans/defs/details/{{finding_a.scan.scan_definition.id}}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
-        <td>{{ finding_b.scan.title }} <a href="/scans/defs/details/{{finding_b.scan.scan_definition.id}}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
+        <td>{{ finding_a.scan.title }} <a href="{% url 'detail_scan_def_view' finding_a.scan.scan_definition.id %}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
+        <td>{{ finding_b.scan.title }} <a href="{% url 'detail_scan_def_view' finding_b.scan.scan_definition.id %}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
       </tr>
 
       <!-- Scan policy -->
@@ -185,8 +185,8 @@
       <tr>
       {% endif %}
         <td><b>Scan policy</b></td>
-        <td>{{ finding_a.scan.engine_policy.name }} <a href="/engines/policies/edit/{{finding_a.scan.engine_policy.id}}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
-        <td>{{ finding_b.scan.engine_policy.name }} <a href="/engines/policies/edit/{{finding_b.scan.engine_policy.id}}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
+        <td>{{ finding_a.scan.engine_policy.name }} <a href="{% url 'edit_policy_view' finding_a.scan.engine_policy.id %}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
+        <td>{{ finding_b.scan.engine_policy.name }} <a href="{% url 'edit_policy_view' finding_b.scan.engine_policy.id %}"><span class='glyphicon glyphicon-share-alt'></span></a></td>
       </tr>
 
       <!-- Scan engine type -->

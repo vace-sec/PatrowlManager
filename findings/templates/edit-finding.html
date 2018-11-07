@@ -2,7 +2,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/findings/list">findings</a></li>
+  <li><a href="{% url 'list_findings_view' %}">findings</a></li>
   <li class="active">edit</li>
 </ul>
 
@@ -20,7 +20,7 @@
 </script>
 
 <div class="container">
-  <form action="/findings/edit/{{ finding.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'edit_finding_view' finding.id %}" method="post" class="form-horizontal">
     <legend>Edit finding</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -51,7 +51,7 @@
           <input type="submit" class="btn btn-primary" value="Update Finding">
         </div>
         <div class="col-sm-4">
-          <button class="btn btn-primary"><a href="/findings/list">Cancel</a></button>
+          <button class="btn btn-primary"><a href="{% url 'list_findings_view' %}">Cancel</a></button>
         </div>
       </div>
   </form>

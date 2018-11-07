@@ -2,13 +2,13 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/settings/">settings</a></li>
+  <li><a href="{% url 'show_settings_menu' %}">settings</a></li>
   <li><a href="/users/list">users</a></li>
   <li class="active">add new user</li>
 </ul>
 
 <div class="container">
-  <form action="/users/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_user_view' %}" method="post" class="form-horizontal">
     <legend>Add a new user</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -36,7 +36,7 @@
       {% endfor %}
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="/settings/#users" class="btn btn-primary">Cancel</a>
+        <a href="{% url 'show_settings_menu' %}#users" class="btn btn-primary">Cancel</a>
       </div>
   </form>
 </div>

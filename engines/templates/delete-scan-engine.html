@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/engines/delete/{{ engine.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'delete_engine_view' engine.id %}" method="post" class="form-horizontal">
 
     <legend>Do you confirm the deletion?</legend>
     {% csrf_token %}
@@ -11,7 +11,7 @@
     <p>url: {{ engine.api_url }}</p>
     <div class="form-group">
       <button type="submit" class="btn btn-warning">Delete</button>
-      <button class="btn btn-primary"><a href="/engines/list">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'list_engines_view' %}">Cancel</a></button>
     </div>
   </form>
 

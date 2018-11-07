@@ -2,12 +2,12 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/policies/list">policies</a></li>
+  <li><a href="{% url 'list_policies_view' %}">policies</a></li>
   <li class="active">Import policies</li>
 </ul>
 
 <div class="container">
-  <form action="/engines/policies/import" method="post" class="form-horizontal" enctype="multipart/form-data">
+  <form action="{% url 'import_policies_view' %}" method="post" class="form-horizontal" enctype="multipart/form-data">
     <legend>Import engine policies (JSON-formatted)</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -35,7 +35,7 @@
       {% endfor %}
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button class="btn btn-primary"><a href="/engines/policies/list">Cancel</a></button>
+        <button class="btn btn-primary"><a href="{% url 'list_policies_view' %}">Cancel</a></button>
       </div>
   </form>
 </div>

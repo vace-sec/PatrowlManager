@@ -2,13 +2,13 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/list">engines</a></li>
-  <li><a href="/engines/types/list">types</a></li>
+  <li><a href="{% url 'list_engines_view' %}">engines</a></li>
+  <li><a href="{% url 'list_engine_types_view' %}">types</a></li>
   <li class="active">add new engine type</li>
 </ul>
 
 <div class="container">
-  <form action="/engines/types/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_engine_types_view' %}" method="post" class="form-horizontal">
     <legend>Add a engine type</legend>
       {% csrf_token %}
       {% for field in form %}

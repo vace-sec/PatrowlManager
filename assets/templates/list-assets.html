@@ -28,7 +28,7 @@ function toggle(source, element) {
 </script>
 
 <ul class="breadcrumb">
-  <li><a href="/assets/list">assets</a></li>
+  <li><a href="{% url 'list_assets_view' %}">assets</a></li>
   <li class="active">list</li>
 </ul>
 
@@ -52,8 +52,8 @@ function toggle(source, element) {
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdown-menu-sort" style="left: 15px;">
-              <li><a class="btn-asset-add" href="/assets/add">+ Add a new asset manually</a></li>
-              <li><a class="btn-asset-bulkadd" href="/assets/bulkadd">+ Add new assets in bulk</a></li>
+              <li><a class="btn-asset-add" href="{% url 'add_asset_view' %}">+ Add a new asset manually</a></li>
+              <li><a class="btn-asset-bulkadd" href="{% url 'bulkadd_asset_view' %}">+ Add new assets in bulk</a></li>
               <li><a class="btn-delete-selected" href="#">! Delete selected assets (no confirm)</a></li>
             </ul>
           </div>
@@ -77,7 +77,7 @@ function toggle(source, element) {
               <li><a onclick="sortby('type', 'assets');">Type</a></li>
               <li><a onclick="sortby('-updated_at', 'assets');">Last update</a></li>
             </ul>
-            <button class="btn btn-primary btn-xs" type="button" onclick="location.href='/assets/list'">
+            <button class="btn btn-primary btn-xs" type="button" onclick="location.href='{% url 'list_assets_view' %}'">
               Reset
             </button>
           </div>
@@ -102,7 +102,7 @@ function toggle(source, element) {
           {% for asset in assets %}
           <tr>
             <td><input type="checkbox" class="radio" name="asset" value="{{ asset.id }}"/></td>
-            <td><a href="/assets/details/{{ asset.id }}">{{ asset.name }} ({{ asset.value|truncatechars:50 }})</a></td>
+            <td><a href="{% url 'detail_asset_view' asset.id %}">{{ asset.name }} ({{ asset.value|truncatechars:50 }})</a></td>
             <td>{{ asset.cat_list|join:", "|truncatechars:15 }}</td>
             {% if asset.criticity == 'low' %}
             <td><span class="label label-success">Low</span></td>
@@ -117,9 +117,9 @@ function toggle(source, element) {
             <td>{{ asset.type }}</td>
             <td>{{ asset.updated_at|smartdate }}</td>
             <td>
-              <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/assets/details/{{ asset.id }}'">
+              <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'detail_asset_view' asset.id %}'">
                 <span class="glyphicon glyphicon-eye-open"></span></button>
-              <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/assets/edit/{{ asset.id }}'">
+              <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_asset_view' asset.id %}'">
                 <span class="glyphicon glyphicon-pencil"></span></button>
               <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete-asset"
                  asset-id="{{ asset.id }}" asset-value="{{ asset.value }}">
@@ -180,7 +180,7 @@ function toggle(source, element) {
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
-            <li><a class="btn-assetgroup-add" href="/assets/addgroup">+ Add a new asset group manually</a></li>
+            <li><a class="btn-assetgroup-add" href="{% url 'add_asset_group_view' %}">+ Add a new asset group manually</a></li>
             <!-- <li><a class="btn-delete-selected" href="#">! Delete selected assets (no confirm)</a></li> -->
           </ul>
         </div>
@@ -236,9 +236,9 @@ function toggle(source, element) {
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdown-menu-actions">
-      <li><a class="btn-asset-add" href="/assets/add">+ Add a new asset manually</a></li>
-      <li><a class="btn-asset-bulkadd" href="/assets/bulkadd">+ Add new assets in bulk</a></li>
-      <li><a class="btn-assetgroup-add" href="/assets/addgroup">+ Add a new asset group</a></li>
+      <li><a class="btn-asset-add" href="{% url 'add_asset_view' %}">+ Add a new asset manually</a></li>
+      <li><a class="btn-asset-bulkadd" href="{% url 'bulkadd_asset_view' %}">+ Add new assets in bulk</a></li>
+      <li><a class="btn-assetgroup-add" href="{% url 'add_asset_group_view' %}">+ Add a new asset group</a></li>
       <li><a class="btn-delete-selected" href="#">! Delete selected assets (no confirm)</a></li>
     </ul>
   </div> -->
@@ -356,7 +356,7 @@ function toggle(source, element) {
         if (url.searchParams.get("n") == null) {
           n_options = NB_ROWS;
         }
-        window.location = "/assets/list?sort="+sort_options+"&filter="+e.target.value+"&n="+n_options;
+        window.location = "{% url 'list_assets_view' %}?sort="+sort_options+"&filter="+e.target.value+"&n="+n_options;
 
       } else if (e.which == 27) { e.target.value = ""; } // Escape Key
     });
@@ -371,7 +371,7 @@ function toggle(source, element) {
     $("button.btn-delete-asset").on('click', function (e) {
       csrf_token = $("div#delete-asset").attr('csrf-token');
       id = $("div#delete-asset").attr('asset-id');
-      delete_asset_url = "/assets/delete/"+id;
+      delete_asset_url = "{% url 'delete_asset_view' %}"+id;
       var request = $.ajax({
         url: delete_asset_url,
         method: "POST",
@@ -392,7 +392,7 @@ function toggle(source, element) {
     $("button.btn-delete-asset-group").on('click', function (e) {
       csrf_token = $("div#delete-asset-group").attr('csrf-token');
       id = $("div#delete-asset-group").attr('asset-group-id');
-      delete_asset_group_url = "/assets/deletegroup/"+id;
+      delete_asset_group_url = "{% url 'delete_asset_group_view' %}"+id;
       var request = $.ajax({
         url: delete_asset_group_url,
         method: "POST",
@@ -413,7 +413,7 @@ function toggle(source, element) {
       })
 
       if (assets_to_delete.length != 0){
-        delete_url="/assets/delete"
+        delete_url="{% url 'delete_assets' %}"
         var request = $.ajax({
           url: delete_url,
           method: "POST",

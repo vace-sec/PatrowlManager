@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/list">engines</a></li>
+  <li><a href="{% url 'list_engines_view' %}">engines</a></li>
   <li class="active">instances</li>
 </ul>
 
@@ -38,7 +38,7 @@
       <td>{{ engine.api_url }}</td>
       <td>{{ engine.updated_at|smartdate }}</td>
       <td>
-        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/edit/{{ engine.id }}'">
+        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_engine_view' engine.id %}'">
           <span class="glyphicon glyphicon-edit"></span></button>
         <button type="button" class="btn btn-default btn-xs btn-engine-info" data-toggle="modal" data-target="#modal-info-engine" engine-id="{{ engine.id }}">
           <span class="glyphicon glyphicon-info-sign"></span></button>
@@ -59,7 +59,7 @@
   {% endfor %}
   </tbody>
   </table>
-  <a href="/engines/add">+ Add a new scan engine</a><br/>
+  <a href="{% url 'add_engine_view' %}">+ Add a new scan engine</a><br/>
   <a href="#" class="text-warning btn-refresh-all-engines">* Refresh scan engine status</a><br/>
   {% if autorefresh_status %}
     <a href="#" class="text-danger btn-autorefresh-all-engines">* Disable Auto-refresh scan engine status</a>
@@ -136,7 +136,7 @@
     $("#modal-info-engine").on('show.bs.modal', function (e) {
       engine_id = e.relatedTarget.getAttribute('engine-id');
       xhr = $.ajax({
-        url: "/engines/info/"+engine_id,
+        url: "{% url 'info_engine_api' %}"+engine_id,
         method: "GET",
         dataType: 'json',
         beforeSend: function(){
@@ -183,7 +183,7 @@
     $("button.btn-delete-engine").on('click', function (e) {
       csrf_token = $("div#delete-engine").attr('csrf-token');
       engine_id = $("div#delete-engine").attr('engine-id');
-      delete_engine_url = "/engines/delete/"+engine_id;
+      delete_engine_url = "{% url 'delete_engine_view' %}"+engine_id;
       xhr = $.ajax({
         url: delete_engine_url,
         method: "POST",
@@ -197,7 +197,7 @@
     // Change engine status (enable-disable)
     $("button.btn-change-status").on('click', function(eventObject) {
       engine_id = eventObject.target.getAttribute('engine-id');
-      engine_url = "/engines/change_status/"+engine_id;
+      engine_url = "{% url 'toggle_engine_status' %}"+engine_id;
       console.log(engine_url);
       var xhr = $.get(engine_url, function(data) {
         location.reload()
@@ -216,7 +216,7 @@
     // Refresh an engine status
     $("button.btn-refresh-engine-status").on('click', function(eventObject) {
       engine_id = eventObject.currentTarget.getAttribute('engine-id');
-      engine_url = "/engines/"+engine_id+"/refresh";
+      engine_url = "/engines/"+engine_id+"/refresh"; // TODO how change this to django url filter?
       var xhr = $.get(engine_url, function(data) {
         location.reload();
         if (data.status == "success") {
@@ -233,7 +233,7 @@
 
     // Refresh all engine status
     $("a.btn-refresh-all-engines").on('click', function() {
-      engine_url = "/engines/refresh";
+      engine_url = "{% url 'refresh_engines_status' %}";
       var xhr = $.get(engine_url, function(data) {
         if (xhr.status == 200) {
           //console.log( "Status successfully refreshed!" );
@@ -250,7 +250,7 @@
 
     // Auto-Refresh all engine status
     $("a.btn-autorefresh-all-engines").on('click', function() {
-      autorefresh_url = "/engines/autorefresh";
+      autorefresh_url = "{% url 'toggle_autorefresh_engine_status' %}";
       var xhr = $.get(autorefresh_url, function(data) {
         if (xhr.status == 200) {
           if (data.autorefresh_task_status == true){

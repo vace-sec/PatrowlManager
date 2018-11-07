@@ -20,7 +20,7 @@ def search_view(request):
     # search by asset value or description
     for asset_group in AssetGroup.objects.filter(
         Q(description__icontains=kw) | Q(name__icontains=kw)):
-        results.append({"type": "asset_group", "value": asset_group.name, "id": asset_group.id, "link": "/assets/list"})
+        results.append({"type": "asset_group", "value": asset_group.name, "id": asset_group.id, "link": "{% url 'list_assets_view' %}"})
 
     # search by asset owner name, url or comments
     for asset_owner in AssetOwner.objects.filter(Q(name__icontains=kw) | Q(url__icontains=kw) | Q(comments__icontains=kw)):
@@ -29,7 +29,7 @@ def search_view(request):
     # search by asset owner contacts name, info
     for asset_owner_contact in AssetOwnerContact.objects.filter(
         Q(name__icontains=kw) | Q(department__icontains=kw) | Q(title__icontains=kw) | Q(url__icontains=kw) | Q(comments__icontains=kw)):
-        results.append({"type": "asset_owner_contact", "value": asset_owner_contact.name, "id": asset_owner_contact.id, "link": "/assets/owners/list"})
+        results.append({"type": "asset_owner_contact", "value": asset_owner_contact.name, "id": asset_owner_contact.id, "link": "{% url 'list_asset_owners_view' %}"})
 
     # search by asset document doctitle or comments
     for asset_owner_doc in AssetOwnerDocument.objects.filter(Q(doctitle__icontains=kw) | Q(comments__icontains=kw)):

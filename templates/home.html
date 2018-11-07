@@ -86,8 +86,8 @@
   $(function() {
 
     // update the findings stat pies
-    findings_url = "/findings/api/v1/stats"
-    assets_url = "/assets/api/v1/stats"
+    findings_url = "{% url 'get_findings_stats' %}"
+    assets_url = "{% url 'get_assets_stats' %}"
     finding_config = {
       type: 'pie',
       data: {
@@ -158,13 +158,13 @@
 
 
     // update the scans stats
-    scan_url = "/scans/api/v1/stats"
+    scan_url = "{% url 'get_scans_stats' %}"
     var xhr = $.get(scan_url, function(resp) {
       //console.log(resp)
       $("#scan-stats-div > p").html(
-        "<a href='/scans/defs/list'> Scans defined <span class='badge'>"+resp["nb_scans_defined"]+"</span></a><br/>" +
-        "<a href='/scans/list'> Scans performed <span class='badge'>"+resp["nb_scans_performed"]+"</span></a><br/>" +
-        "<a href='/scans/defs/list'> Active periodic Scans <span class='badge'>"+resp["nb_active_periodic_scans"]+"</span></a><br/>"
+        "<a href='{% url 'list_scan_def_view' %}'> Scans defined <span class='badge'>"+resp["nb_scans_defined"]+"</span></a><br/>" +
+        "<a href='{% url 'list_scans_view' %}'> Scans performed <span class='badge'>"+resp["nb_scans_performed"]+"</span></a><br/>" +
+        "<a href='{% url 'list_scan_def_view' %}'> Active periodic Scans <span class='badge'>"+resp["nb_active_periodic_scans"]+"</span></a><br/>"
       );
     });
 

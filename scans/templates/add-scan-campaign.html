@@ -4,13 +4,13 @@
 {{ form.media }}
 
 <ul class="breadcrumb">
-  <li><a href="/scans/defs/list">scans</a></li>
-  <li><a href="/scans/campaigns/list">campaigns</a></li>
+  <li><a href="{% url 'list_scan_def_view' %}">scans</a></li>
+  <li><a href="{% url 'list_scan_campaigns_view' %}">campaigns</a></li>
   <li class="active">add new scan campaign</li>
 </ul>
 
 <div class="container">
-  <form action="/scans/campaigns/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_scan_campaign_view' %}" method="post" class="form-horizontal">
     <legend>Add a new scan campaign</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -39,7 +39,7 @@
       <div class="form-group">
         <button type="submit" class="btn btn-warning">Submit</button>
         <button type="reset" class="btn btn-primary">Reset</button>
-        <button class="btn btn-primary"><a href="/scans/campaigns/list">Cancel</a></button>
+        <button class="btn btn-primary"><a href="{% url 'list_scan_campaigns_view' %}">Cancel</a></button>
       </div>
   </form>
 </div>

@@ -60,18 +60,18 @@ function toggle(source, element) {
 </script>
 
 <ul class="breadcrumb">
-  <li><a href="/findings/list">findings</a></li>
+  <li><a href="{% url 'list_findings_view' %}">findings</a></li>
   <li class="active">list ({{ nb_findings }} results)</li>
 </ul>
 
 <div class="container-fluid">
 	<div class="btn-group">
-    <a href="/findings/list" class="btn btn-xs btn-primary">Quick filters</a>
+    <a href="{% url 'list_findings_view' %}" class="btn btn-xs btn-primary">Quick filters</a>
     <a href="#" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
     <ul class="dropdown-menu">
-      <li><a href="/findings/list">Show all findings</a></li>
-      <li><a href="/findings/list?_status=new">Show new findings</a></li>
-      <li><a href="/findings/list?_status=ack">Show acked findings</a></li>
+      <li><a href="{% url 'list_findings_view' %}">Show all findings</a></li>
+      <li><a href="{% url 'list_findings_view' %}?_status=new">Show new findings</a></li>
+      <li><a href="{% url 'list_findings_view' %}?_status=ack">Show acked findings</a></li>
     </ul>
   </div>
   or <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-filters">Advanced filters</button>
@@ -90,7 +90,7 @@ function toggle(source, element) {
     </thead>
     <tbody>
     {% for finding in findings %}
-    <tr class='dblclickable-row' data-href='/findings/details/{{ finding.id }}'>
+    <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}'>
       <td><input type="checkbox" class="radio" name="finding" value="{{ finding.id }}"/></td>
       <td>{{ finding.asset.name|truncatechars:60 }}</td>
       <td>{{ finding.title|truncatechars:60 }}</td>
@@ -114,7 +114,7 @@ function toggle(source, element) {
       <td>{{ finding.updated_at|smartdate}}</td>
       <td>
         <div class="btn-toolbar btn-group">
-          <button type="button" class="btn btn-default btn-xs" onclick="location.href='/findings/details/{{ finding.id }}'"><span class="glyphicon glyphicon-plus-sign"></span></button>
+          <button type="button" class="btn btn-default btn-xs" onclick="location.href='{% url 'details_finding_view' finding.id %}'"><span class="glyphicon glyphicon-plus-sign"></span></button>
 					<button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete-finding"
             finding-id="{{ finding.id }}" finding-title="{{ finding.title }}" finding-asset="{{ finding.asset_name }}" finding-severity="{{ finding.severity }}">
             <span class="glyphicon glyphicon-remove"></button>
@@ -126,7 +126,7 @@ function toggle(source, element) {
   </table>
 
   <a href="#" class="btn-compare-selected">// Compare findings</a><br/>
-  <a href="/findings/add">+ Add a new finding manually</a><br/>
+  <a href="{% url 'add_finding_view' %}">+ Add a new finding manually</a><br/>
   <a class="text-default btn-export-selected" href="#">% Export selected findings (CSV)</a><br/>
   <a class="text-warning btn-ack" href="#">* Ack selected findings</a><br/>
   <a class="text-danger btn-delete-selected" href="#">- Delete selected findings (no confirm)</a>
@@ -223,7 +223,7 @@ function toggle(source, element) {
       <!-- Modal Body -->
       <div class="modal-body">
         <div class="container">
-          <form action="/findings/list" method="GET" id="finding-filter-form" class="form-horizontal">
+          <form action="{% url 'list_findings_view' %}" method="GET" id="finding-filter-form" class="form-horizontal">
           <!-- <form class="form-inline"> -->
 						<div class="form-group">
 	            <label class="col-sm-2 control-label" for="filter_startdate">Start at</label>
@@ -388,7 +388,7 @@ function toggle(source, element) {
 
 		// Apply filters
 		$('button.btn-save-filters').on('click', function (e){
-			filter_findings_url = "/findings/list?";
+			filter_findings_url = "{% url 'list_findings_view' %}?";
 			if ($('input#filter_asset_value_input').val() != "") {
 				filter_findings_url+="&_asset_value="+$('#filter_asset_value_input').val();
 				filter_findings_url+="&_asset_value_cond="+$('#filter_asset_value_condition').val();
@@ -450,7 +450,7 @@ function toggle(source, element) {
       })
       if (findings_to_delete.length != 0){
         var request = $.ajax({
-          url: "/findings/delete",
+          url: "{% url 'delete_findings' %}",
           method: "POST",
           data: JSON.stringify(findings_to_delete),
           contentType: "application/json"
@@ -474,7 +474,7 @@ function toggle(source, element) {
 					headers: {
 				    Accept: "text/csv; charset=utf-8"
 				  },
-          url: "/findings/export",
+          url: "{% url 'export_findings_csv' %}",
           method: "POST",
           data: JSON.stringify(findings_to_export),
           contentType: "application/json"
@@ -501,7 +501,7 @@ function toggle(source, element) {
 
       if (findings_to_ack.length != 0){
         var request = $.ajax({
-          url: "/findings/status",
+          url: "{% url 'change_findings_status' %}",
           method: "POST",
           data: JSON.stringify(findings_to_ack),
           contentType: "application/json"
@@ -523,7 +523,7 @@ function toggle(source, element) {
         }
       });
       if(findings_to_compare.length == 2){
-        window.location.href ="/findings/compare?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
+        window.location.href ="{% url 'compare_rawfindings_view' %}?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
       }
     });
 
@@ -551,7 +551,7 @@ function toggle(source, element) {
 		$("#filter_asset_tags").autocomplete({
 			source: function(req, response) {
 				 $.ajax({
-					url: "/assets/get_tags",
+					url: "{% url 'get_asset_tags_api' %}",
 					dataType: "json",
 					success: function( data ) {
 						var re = $.ui.autocomplete.escapeRegex(req.term);

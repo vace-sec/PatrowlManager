@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- <div class="container">
-  <form action="/assets/owners/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_asset_owner_view' %}" method="post" class="form-horizontal">
     <legend>Add an asset owner</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -30,19 +30,19 @@
       {% endfor %}
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button class="btn btn-primary"><a href="/assets/owners/list">Cancel</a></button>
+        <button class="btn btn-primary"><a href="{% url 'list_asset_owners_view' %}">Cancel</a></button>
       </div>
   </form>
 </div> -->
 
 <ul class="breadcrumb">
-  <li><a href="/assets/list">assets</a></li>
-  <li><a href="/assets/owners/list">owners</a></li>
-  <li class="active">add new asset owner [<a href='/assets/owners/list'>back</a>]</li>
+  <li><a href="{% url 'list_assets_view' %}">assets</a></li>
+  <li><a href="{% url 'list_asset_owners_view' %}">owners</a></li>
+  <li class="active">add new asset owner [<a href='{% url 'list_asset_owners_view' %}'>back</a>]</li>
 </ul>
 
 <div class="container">
-  <form action="/assets/owners/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_asset_owner_view' %}" method="post" class="form-horizontal">
     <legend>Add an asset owner</legend>
     {% csrf_token %}
 
@@ -83,7 +83,7 @@
     <!-- Submit/Cancel buttons -->
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Submit</button>
-      <button class="btn btn-primary"><a href="/assets/owners/list">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'list_asset_owners_view' %}">Cancel</a></button>
     </div>
 
   </form>

@@ -59,9 +59,9 @@ div.risk-trends {
 </style>
 
 <ul class="breadcrumb">
-  <li><a href="/assets/list">assets</a></li>
-  <li><a href="/assets/details/{{ asset.id }}">{{ asset.value }}</a></li>
-  <li class="active">details [<a href='/assets/edit/{{ asset.id }}'>edit</a>]</li>
+  <li><a href="{% url 'list_assets_view' %}">assets</a></li>
+  <li><a href="{% url 'detail_asset_view' asset.id %}">{{ asset.value }}</a></li>
+  <li class="active">details [<a href='{% url 'edit_asset_view' asset.id %}'>edit</a>]</li>
 </ul>
 
 <div class="container-fluid" asset-id="{{asset.id}}">
@@ -99,8 +99,8 @@ div.risk-trends {
 
         <dt>Download report</dt>
         <dd>
-          <a href="/assets/report/json/{{ asset.id }}">json</a> -
-          <a href="/assets/report/html/{{ asset.id }}">html</a> - pdf - raw
+          <a href="{% url 'get_asset_report_json' asset.id %}">json</a> -
+          <a href="{% url 'get_asset_report_html' asset.id %}">html</a> - pdf - raw
         </dd>
       </dl>
     </div><!-- End of first col -->
@@ -255,7 +255,7 @@ div.risk-trends {
         </thead>
         <tbody>
           {% for finding in findings %}
-          <tr class='dblclickable-row' data-href='/findings/details/{{ finding.id }}'>
+          <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}'>
             <td><input type="checkbox" class="radio" name="finding" value="{{ finding.id }}"/></td>
             <td>{{ finding.title }}</td>
             <td>{{ finding.type }}</td>
@@ -281,9 +281,9 @@ div.risk-trends {
             <td>{{ finding.updated_at|smartdate }}</td>
             <td>
               <div class="btn-toolbar btn-group">
-                <a href="/findings/details/{{ finding.id }}" class="btn btn-default btn-xs">
+                <a href="{% url 'details_finding_view' finding.id %}" class="btn btn-default btn-xs">
                   <span class="glyphicon glyphicon-plus-sign"></span></a>
-                <a href="/findings/delete/{{ finding.id }}" class="btn btn-danger btn-xs"
+                <a href="{% url 'delete_finding_view' finding.id %}" class="btn btn-danger btn-xs"
                 data-toggle="modal" data-target="#modal-delete-finding"
                 finding-id="{{ finding.id }}" finding-title="{{ finding.title }}">
                 <span class="glyphicon glyphicon-remove"></span></a>
@@ -329,7 +329,7 @@ div.risk-trends {
                 {{scope}}{% if not forloop.last %},{% endif %}
               {% endfor %}
             </td>
-            <td><a href="/findings/details/{{ finding.id }}">{{ finding.id }}</a></td>
+            <td><a href="{% url 'details_finding_view' finding.id %}">{{ finding.id }}</a></td>
             <td>{{ finding.status }}</td>
             <td>{{ finding.updated_at|smartdate }}</td>
           </tr>
@@ -339,7 +339,7 @@ div.risk-trends {
       </table>
     </div>
     <div id="scans_div" class="tab-pane fade">
-      <h5>Scan definitions [<a href="/scans/defs/add?asset_id={{asset.id}}">+ add new</a>]</h5>
+      <h5>Scan definitions [<a href="{% url 'add_scan_def_view' %}?asset_id={{asset.id}}">+ add new</a>]</h5>
       <table class="table table-hover" id="table" data-toggle="table">
         <thead>
           <tr>
@@ -355,7 +355,7 @@ div.risk-trends {
         <tbody>
           {% for scan_def in scan_defs %}
           <tr>
-            <td><a href="/scans/defs/details/{{ scan_def.id }}" class="text-primary">{{ scan_def.title }}</a></td>
+            <td><a href="{% url 'detail_scan_def_view' scan_def.id %}" class="text-primary">{{ scan_def.title }}</a></td>
             <td>{{ scan_def.scan_set_count }}</td>
             <td>{{ scan_def.scan_type }}</td>
             <td>{{ scan_def.engine_type_name }}</td>
@@ -370,7 +370,7 @@ div.risk-trends {
             {% endif %}
             <td>{{ scan_def.updated_at|smartdate }}</td>
             <td>
-              <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/scans/defs/edit/{{ scan_def.id }}'">
+              <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_scan_def_view' scan_def.id %}'">
                 <span class="glyphicon glyphicon-edit"></span></button>
               {% if scan_def.scan_type == "periodic" %}
                 {% if scan_def.enabled %}
@@ -408,7 +408,7 @@ div.risk-trends {
         </thead>
         <tbody>
           {% for scan in scans %}
-            <tr class='dblclickable-row' data-href='/scans/details/{{scan.id}}'>
+            <tr class='dblclickable-row' data-href='{% url 'detail_scan_view' scan.id %}'>
               <td>[{{ scan.engine_type_name }}] {{ scan.title }}</td>
               {% if scan.status == "started" %}
               <td class="text-center"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="color:orange" title="Started"></span></td>
@@ -456,7 +456,7 @@ div.risk-trends {
               </td>
               <td>{{ scan.updated_at|smartdate }}</td>
               <td>
-                <button type="button" class="btn btn-default btn-xs" title="Details" onclick="location.href='/scans/details/{{ scan.id }}'">
+                <button type="button" class="btn btn-default btn-xs" title="Details" onclick="location.href='{% url 'detail_scan_view' scan.id %}'">
                   details</button>
                 <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete-scan"
                   scan-id="{{ scan.id }}" scan-title="{{ scan.title }}">
@@ -494,7 +494,7 @@ div.risk-trends {
         <tbody>
         {% for asset_group in asset.assetgroup_set.all %}
         <tr>
-          <td><a href="/assets/groups/details/{{ asset_group.id }}">{{ asset_group.name }}</a></td>
+          <td><a href="{% url 'detail_asset_group_view' asset_group.id %}">{{ asset_group.name }}</a></td>
           <td>{{ asset_group.get_asset_names|truncatechars:128 }}</td>
           {% if asset_group.criticity == 'low' %}
           <td><span class="label label-low">Low</span></td>
@@ -506,9 +506,9 @@ div.risk-trends {
           <td><span class="badge badge-risk-grade-{{ asset_group.get_risk_grade }}">{{ asset_group.get_risk_grade }}</span></td>
           <td>{{ asset_group.updated_at|smartdate }}</td>
           <td>
-            <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/assets/groups/details/{{ asset_group.id }}'">
+            <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'detail_asset_group_view' asset_group.id %}'">
               <span class="glyphicon glyphicon-eye-open"></span></button>
-            <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/assets/groups/edit/{{ asset_group.id }}'">
+            <button type="button" class="btn btn-warning btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_asset_group_view' asset_group.id %}'">
               <span class="glyphicon glyphicon-pencil"></span></button>
             <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal-delete-asset-group"
               asset-group-id="{{ asset_group.id }}" asset-group-value="{{ asset_group.name }}">
@@ -533,7 +533,7 @@ div.risk-trends {
 
     </div>
     <div id="owners_div" class="tab-pane fade">
-      <h4>Owners [<a href="/assets/owners/add">+ add new</a>]</h4>
+      <h4>Owners [<a href="{% url 'add_asset_owner_view' %}">+ add new</a>]</h4>
       {% for owner in asset.assetowner_set.all %}
       <dl class="dl-horizontal">
         <dt>Name</dt>
@@ -558,13 +558,13 @@ div.risk-trends {
           {% for doc in owner.documents.all %}
             <li>
               {% if doc.tlp_color == 'red' %}
-              <a href="/assets/owners/getdoc/{{doc.id}}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-danger">TLP:RED</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-danger">TLP:RED</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'amber' %}
-              <a href="/assets/owners/getdoc/{{doc.id}}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-warning">TLP:AMBER</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-warning">TLP:AMBER</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'green' %}
-              <a href="/assets/owners/getdoc/{{doc.id}}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-success">TLP:GREEN</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-success">TLP:GREEN</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'white' %}
-              <a href="/assets/owners/getdoc/{{doc.id}}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-white" style="color: black;">TLP:WHITE</span>({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-white" style="color: black;">TLP:WHITE</span>({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
             {% endif %}
              </li>
           {% endfor %}
@@ -726,7 +726,7 @@ div.risk-trends {
             1/ All sub-tags will be deleted if a parent tag is added<br/>
             2/ Parent tag will be deleted if a child tag is added</p>
 
-          <form class="search-asset-tags-form" action="/assets/details/{{asset.id}}/add_tag" method="post">
+          <form class="search-asset-tags-form" action="{% url 'add_asset_tags_api' asset.id %}" method="post">
             {% csrf_token %}
             <input type="text" id="input-search-tags" name="input-search-tags"/><button class="btn btn-xs btn-warning" type="submit">+</button>
           </form>
@@ -788,7 +788,7 @@ div.risk-trends {
   function print_asset_trends_chart(period = "week", max_ticks = 20){
     if(asset_trends_chart){ asset_trends_chart.destroy(); }
     // update the findings stat pies
-    asset_trends_chart_url = "/assets/api/v1/trends/{{asset.id}}?period_by="+period+"&max_ticks="+max_ticks;
+    asset_trends_chart_url = "{% url 'get_asset_trends' asset.id %}?period_by="+period+"&max_ticks="+max_ticks;
 
     //data_labels_id = [];
     data_labels_date = [];
@@ -972,7 +972,7 @@ div.risk-trends {
       //     var idx = activePoints[0]['_index'];
       //     var label = chartData.labels[idx];
       //     //var value = chartData.datasets[0].data[idx];
-      //     window.location = "/scans/details/"+label;
+      //     window.location = "{% url 'detail_scan_view' %}"+label;
       //   }
       // };
     });
@@ -989,7 +989,7 @@ div.risk-trends {
       })
 
       if (findings_to_delete.length != 0){
-        delete_url="/findings/delete"
+        delete_url="{% url 'delete_findings' %}"
         var request = $.ajax({
           url: delete_url,
           method: "POST",
@@ -1012,7 +1012,7 @@ div.risk-trends {
       })
 
       if (findings_to_ack.length != 0){
-        ack_url="/findings/status"
+        ack_url="{% url 'change_findings_status' %}"
         var request = $.ajax({
           url: ack_url,
           method: "POST",
@@ -1036,13 +1036,13 @@ div.risk-trends {
         }
       });
       if(findings_to_compare.length == 2){
-        window.location.href ="/findings/compare?finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
+        window.location.href ="{% url 'compare_rawfindings_view' %}?finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
       }
     });
 
     // Delete tag
     $("i.delete-tag-btn").on('click', function(eventObject) {
-      del_url="/assets/details/{{asset.id}}/del_tag"
+      del_url="{% url 'delete_asset_tags_api' asset.id %}"
       csrf_token = eventObject.currentTarget.getAttribute('csrf-token');
       tag_id = eventObject.currentTarget.getAttribute('tag-id');
       var request = $.ajax({
@@ -1060,7 +1060,7 @@ div.risk-trends {
     $("#input-search-tags").autocomplete({
       source: function(req, response) {
          $.ajax({
-          url: "/assets/get_tags",
+          url: "{% url 'get_asset_tags_api' %}",
           dataType: "json",
           success: function( data ) {
             var re = $.ui.autocomplete.escapeRegex(req.term);
@@ -1084,7 +1084,7 @@ div.risk-trends {
     $("button.btn-delete-finding").on('click', function (e) {
       csrf_token = $("div#delete-finding").attr('csrf-token');
       finding_id = $("div#delete-finding").attr('finding-id');
-      delete_finding_url = "/findings/delete/"+finding_id;
+      delete_finding_url = "{% url 'delete_finding_view' %}"+finding_id;
       var request = $.ajax({
         url: delete_finding_url,
         method: "POST",

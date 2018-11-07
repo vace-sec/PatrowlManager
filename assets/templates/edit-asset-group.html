@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/assets/groups/edit/{{ assetgroup_id }}" method="post" class="form-horizontal">
+  <form action="{% url 'edit_asset_group_view' assetgroup_id %}" method="post" class="form-horizontal">
     <legend>Edit an asset group</legend>
     {% csrf_token %}
     {% for field in form %}
@@ -87,13 +87,13 @@ $(function() {
   $("button.btn-delete-asset-group").on('click', function (e) {
     csrf_token = $("div#delete-asset-group").attr('csrf-token');
     id = $("div#delete-asset-group").attr('asset-group-id');
-    delete_asset_group_url = "/assets/deletegroup/"+id;
+    delete_asset_group_url = "{% url 'delete_asset_group_view' %}"+id;
     var request = $.ajax({
       url: delete_asset_group_url,
       method: "POST",
       data: "csrfmiddlewaretoken="+csrf_token,
       success: function(){
-        window.location = "/assets/list";
+        window.location = "{% url 'list_assets_view' %}";
       }
     });
   });

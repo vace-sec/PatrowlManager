@@ -61,12 +61,12 @@ label.radio {
 </style>
 
 <ul class="breadcrumb">
-  <li><a href="/scans/defs/list">scans</a></li>
+  <li><a href="{% url 'list_scan_def_view' %}">scans</a></li>
   <li class="active">add new scan</li>
 </ul>
 
 <div class="container">
-  <form action="/scans/defs/add" method="post" class="form-horizontal">
+  <form action="{% url 'add_scan_def_view' %}" method="post" class="form-horizontal">
     <legend>Add a new scan definition</legend>
     {% csrf_token %}
 
@@ -292,10 +292,10 @@ label.radio {
       // datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '/assets/api/v1/list',
+      prefetch: '{% url 'list_assets_api' %}',
       ttl:0,
       remote: {
-        url: '/assets/api/v1/list?q=%QUERY',
+        url: '{% url 'list_assets_api' %}?q=%QUERY',
         wildcard: '%QUERY'
       }
     });

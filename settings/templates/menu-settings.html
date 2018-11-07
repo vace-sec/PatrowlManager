@@ -25,7 +25,7 @@
 </style>
 
 <ul class="breadcrumb">
-  <li class="active"><a href="/settings/">settings</a></li>
+  <li class="active"><a href="{% url 'show_settings_menu' %}">settings</a></li>
 </ul>
 
 <div id="menu_tabs" class="container-fluid">
@@ -76,7 +76,7 @@
               <span>Import settings</span>
               <input id="fileupload" type="file" name="files[]" multiple>
             </span>
-            <a type="button" class="btn btn-default btn-xs" href="/settings/api/v1/export">
+            <a type="button" class="btn btn-default btn-xs" href="{% url 'export_settings_api' %}">
               > Export settings </a>
 
           </div>
@@ -347,7 +347,7 @@
   });
   $("button.btn-delete-setting").on('click', function (e) {
     id = $("div#delete-setting").attr('setting-id');
-    delete_setting_url = "/settings/api/v1/delete/"+id;
+    delete_setting_url = "{% url 'delete_setting_api' %}"+id;
     var request = $.ajax({
       url: delete_setting_url,
       method: "GET",
@@ -364,7 +364,7 @@
       "setting_key": key,
       "setting_value": value
     };
-    add_setting_url = "/settings/api/v1/add";
+    add_setting_url = "{% url 'add_setting_api' %}";
     var request = $.ajax({
       url: add_setting_url,
       method: "POST",
@@ -398,7 +398,7 @@
     });
     $('input').bind("enterKey", function(e){
        var request = $.ajax({
-         url: "/settings/api/v1/update",
+         url: "{% url 'update_setting_api' %}",
          method: "POST",
          data: JSON.stringify({
            "setting_id": e.target.parentElement.getAttribute("setting-id"),

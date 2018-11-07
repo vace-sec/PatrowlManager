@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/scans/campaigns/edit/{{ scan_campaign_id }}" method="post" class="form-horizontal">
+  <form action="{% url 'edit_scan_campaign_view' scan_campaign_id %}" method="post" class="form-horizontal">
     <legend>Edit a scan definition</legend>
       {% csrf_token %}
       {% for field in form %}
@@ -30,7 +30,7 @@
       {% endfor %}
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Submit</button>
-      <button class="btn btn-primary"><a href="/scans/campaigns/list">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'list_scan_campaigns_view' %}">Cancel</a></button>
     </div>
   </form>
   {% if messages %}

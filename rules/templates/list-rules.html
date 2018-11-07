@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/rules/list">Rules</a></li>
+  <li><a href="{% url 'list_rules_view' %}">Rules</a></li>
   <li class="active">List</li>
 </ul>
 
@@ -242,7 +242,7 @@
       }
 
       var request = $.ajax({
-        url: "/rules/api/v1/add",
+        url: "{% url 'add_rule_api' %}",
         method: "POST",
         data: JSON.stringify(rule_args),
         contentType: "application/json"
@@ -257,7 +257,7 @@
       rule_id = e.currentTarget.getAttribute('rule-id');
 
       var request = $.ajax({
-        url: "/rules/api/v1/duplicate/"+rule_id,
+        url: "{% url 'duplicate_rule_api' %}"+rule_id,
         method: "GET",
       });
       request.done(function(response){
@@ -269,7 +269,7 @@
     $('span.rule-status').on('dblclick', function(e){
       rule_id = e.currentTarget.getAttribute('rule-id');
       var request = $.ajax({
-        url: "/rules/api/v1/change_status/"+rule_id,
+        url: "{% url 'toggle_rule_status_api' %}"+rule_id,
         method: "GET",
         success: function(){
           if (e.currentTarget.textContent == "Disabled") {
@@ -312,7 +312,7 @@
       delete_rule_args.push($("div#delete-rule").attr('rule-id'))
       // csrf_token = $("div#delete-rule").attr('csrf-token');
       // rule_id = $("div#delete-rule").attr('rule-id');
-      delete_rule_url = "/rules/api/v1/delete";
+      delete_rule_url = "{% url 'delete_rules_api' %}";
       var request = $.ajax({
         url: delete_rule_url,
         method: "POST",
@@ -334,7 +334,7 @@
       })
 
       if (rules_to_delete.length != 0){
-        delete_url="/rules/delete"
+        delete_url="/rules/delete" // TODO: Url does not exist
         var request = $.ajax({
           url: delete_url,
           method: "POST",

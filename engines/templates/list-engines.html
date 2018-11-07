@@ -3,7 +3,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-  <li><a href="/engines/list">engines</a></li>
+  <li><a href="{% url 'list_engines_view' %}">engines</a></li>
   <li class="active">types</li>
 </ul>
 
@@ -47,16 +47,16 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/types/edit/{{ engine.id }}'">
+        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'edit_engine_type_view' engine.id %}'">
           <span class="glyphicon glyphicon-edit"></span></button>
-        <button type="button" class="btn btn-danger btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='/engines/types/delete/{{ engine.id }}'">
+        <button type="button" class="btn btn-danger btn-xs" aria-haspopup="true" aria-expanded="false" onclick="location.href='{% url 'delete_engine_type_view' engine.id %}'">
           <span class="glyphicon glyphicon-remove"></span></button>
       </td>
     </tr>
   {% endfor %}
   </tbody>
   </table>
-  <a href="/engines/types/add">+ Add a new engine type</a>
+  <a href="{% url 'add_engine_types_view' %}">+ Add a new engine type</a>
 
   {% if messages %}
   <ul class="messages">

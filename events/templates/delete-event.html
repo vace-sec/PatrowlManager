@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-  <form action="/events/delete/{{ event.id }}" method="post" class="form-horizontal">
+  <form action="{% url 'delete_event_view' event.id %}" method="post" class="form-horizontal">
 
     <legend>Do you confirm the deletion?</legend>
     {% csrf_token %}
@@ -11,7 +11,7 @@
     <p>Timestamp: {{ event.created_at }}</p>
     <div class="form-group">
       <button type="submit" class="btn btn-warning">Delete</button>
-      <button class="btn btn-primary"><a href="/settings/#events">Cancel</a></button>
+      <button class="btn btn-primary"><a href="{% url 'show_settings_menu' %}#events">Cancel</a></button>
     </div>
   </form>
 

@@ -92,7 +92,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
 <div class="container-fluid">
   <!-- 1st row -->
   <div class="row equal">
-    <div class="tile col-sm-15" ondblclick="window.location='/assets/list'">
+    <div class="tile col-sm-15" ondblclick="window.location='{% url 'list_assets_view' %}'">
       <div class="tile-content">
         <h2 class="text-center strong">{{global_stats.assets.total}}</h2>
         <h6 class="text-muted text-center">Assets defined</h6>
@@ -103,14 +103,14 @@ td.bg-grade-F-high {background-color: black; color: white;}
         </small>
       </div>
     </div>
-    <div class="tile col-sm-15" ondblclick="window.location='/findings/list'">
+    <div class="tile col-sm-15" ondblclick="window.location='{% url 'list_findings_view' %}'">
       <div class="tile-content">
         <h2 class="text-center strong">{{global_stats.findings.new}}</h2>
         <h6 class="text-muted text-center">New findings</h6>
         <small>Unique findings: {{global_stats.findings.total}}</small><br/>
       </div>
     </div>
-    <div class="tile col-sm-15" ondblclick="window.location='/scans/list'">
+    <div class="tile col-sm-15" ondblclick="window.location='{% url 'list_scans_view' %}'">
       <div class="tile-content">
         <h2 class="text-center strong">{{global_stats.scans.active_periodic}}</h2>
         <h6 class="text-muted text-center">Active scans</h6>
@@ -118,7 +118,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
         <small>Defined: {{global_stats.scans.defined}}</small>
       </div>
     </div>
-    <div class="tile col-sm-15" ondblclick="window.location='/rules/list'">
+    <div class="tile col-sm-15" ondblclick="window.location='{% url 'list_rules_view' %}'">
       <div class="tile-content">
         <h2 class="text-center strong">{{global_stats.rules.active}}</h2>
         <h6 class="text-muted text-center">Active rules</h6>
@@ -126,7 +126,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
         <small>Notified: {{global_stats.rules.nb_matches}}</small><br/>
       </div>
     </div>
-    <div class="tile col-sm-15" ondblclick="window.location='/engines/list'">
+    <div class="tile col-sm-15" ondblclick="window.location='{% url 'list_engines_view' %}'">
       <div class="tile-content">
         <h2 class="text-center strong">{{global_stats.engines.active}}</h2>
         <h6 class="text-muted text-center">Active engines</h6>
@@ -158,9 +158,9 @@ td.bg-grade-F-high {background-color: black; color: white;}
              {% for grade, value in grades.items %}
            <tr>
              <td>{{ grade }}</td>
-             <td style="width: 20%;" class="bg-grade-{{grade}}-low" onclick="window.location='/assets/list?filter=criticity:low%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"low" }}</td>
-             <td style="width: 20%;" class="bg-grade-{{grade}}-medium" onclick="window.location='/assets/list?filter=criticity:medium%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"medium" }}</td>
-             <td style="width: 20%;" class="bg-grade-{{grade}}-high" onclick="window.location='/assets/list?filter=criticity:high%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"high" }}</td>
+             <td style="width: 20%;" class="bg-grade-{{grade}}-low" onclick="window.location='{% url 'list_assets_view' %}?filter=criticity:low%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"low" }}</td>
+             <td style="width: 20%;" class="bg-grade-{{grade}}-medium" onclick="window.location='{% url 'list_assets_view' %}?filter=criticity:medium%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"medium" }}</td>
+             <td style="width: 20%;" class="bg-grade-{{grade}}-high" onclick="window.location='{% url 'list_assets_view' %}?filter=criticity:high%20score:{{grade}}'">{{ grades|keyvalue:grade|keyvalue:"high" }}</td>
            </tr>
              {% endfor %}
            {% endfor %}
@@ -184,7 +184,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
             </thead>
             <tbody>
               {% for asset in top_critical_assets %}
-              <tr class='dblclickable-row' data-href='/assets/details/{{asset.id}}'>
+              <tr class='dblclickable-row' data-href='{% url 'detail_asset_view' asset.id %}'>
                 <td><span class="badge badge-risk-grade-{{asset.risk_level|keyvalue:'grade'}}">{{asset.risk_level|keyvalue:"grade"}}</span></td>
                 <td>{{asset.value|truncatechars:35}}</td>
                 <td>{{asset|risk_score}}</td>
@@ -223,7 +223,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
             </thead>
             <tbody>
               {% for finding in top_critical_findings %}
-              <tr class='dblclickable-row' data-href='/findings/details/{{finding.id}}'>
+              <tr class='dblclickable-row' data-href='{% url 'details_finding_view' finding.id %}'>
                 {% if finding.severity == 'critical' %}
                 <td><span class="label label-critical">{{ finding.severity }}</span></td>
                 {% elif finding.severity == 'high' %}
@@ -294,7 +294,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
             </thead>
             <tbody>
               {% for assetgroup in top_critical_assetgroups %}
-              <tr class='dblclickable-row' data-href='/assets/groups/details/{{assetgroup.id}}'>
+              <tr class='dblclickable-row' data-href='{% url 'detail_asset_group_view' assetgroup.id %}'>
                 <td><span class="badge badge-risk-grade-{{assetgroup.risk_level|keyvalue:'grade'}}">{{assetgroup.risk_level|keyvalue:"grade"}}</span></td>
                 <td>{{assetgroup.name}}</td>
                 <td>{{assetgroup|risk_score}}</td>
@@ -322,7 +322,7 @@ td.bg-grade-F-high {background-color: black; color: white;}
             </thead>
             <tbody>
               {% for scan in last_scans %}
-              <tr class='dblclickable-row' data-href='/scans/details/{{scan.id}}'>
+              <tr class='dblclickable-row' data-href='{% url 'detail_scan_view' scan.id %}'>
                 <td>{{scan.title|truncatechars:64}}</td>
                 <td class="scan-progress" style="vertical-align: middle;">
                   <div class="progress" style="margin-bottom: 0;">
