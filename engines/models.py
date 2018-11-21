@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -5,7 +7,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from events.models import Event
 from app.settings import MEDIA_ROOT
-import jsonfield, datetime, os, base64
+import jsonfield, os, base64
 
 ENGINE_INSTANCE_STATUS = ['STOPPED', 'READY', 'WORKING', 'ERROR']
 API_AUTH_METHODS = (
@@ -13,6 +15,7 @@ API_AUTH_METHODS = (
     ('HTTPBasic', 'HTTPBasic'),
     ('APIKEY', 'APIKEY')
 )
+
 
 class Engine(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -33,6 +36,7 @@ class Engine(models.Model):
             self.updated_at = timezone.now()
         return super(Engine, self).save(*args, **kwargs)
 
+
 @receiver(post_save, sender=Engine)
 def engine_create_update_log(sender, **kwargs):
     if kwargs['created']:
@@ -42,10 +46,12 @@ def engine_create_update_log(sender, **kwargs):
         Event.objects.create(message="[Engine] Engine '{}' modified (id={})".format(kwargs['instance'], kwargs['instance'].id),
                              type="UPDATE", severity="DEBUG")
 
+
 @receiver(post_delete, sender=Engine)
 def engine_delete_log(sender, **kwargs):
     Event.objects.create(message="[Engine] Engine '{}' deleted (id={})".format(kwargs['instance'], kwargs['instance'].id),
                  type="DELETE", severity="DEBUG")
+
 
 class EngineInstance(models.Model):
     engine = models.ForeignKey(Engine, on_delete=models.CASCADE)
@@ -81,6 +87,7 @@ class EngineInstance(models.Model):
     def __str__(self):
         return "{}@{}".format(self.name, self.api_url)
 
+
 @receiver(post_save, sender=EngineInstance)
 def engineinstance_create_update_log(sender, **kwargs):
     if kwargs['created']:
@@ -89,6 +96,7 @@ def engineinstance_create_update_log(sender, **kwargs):
     else:
         Event.objects.create(message="[EngineInstance] Engine instance '{}' modified (id={})".format(kwargs['instance'], kwargs['instance'].id),
                              type="UPDATE", severity="DEBUG")
+
 
 @receiver(post_delete, sender=EngineInstance)
 def engineinstance_delete_log(sender, **kwargs):
@@ -117,6 +125,7 @@ class EnginePolicyScope(models.Model):
     def __str__(self):
         return self.name
 
+
 @receiver(post_save, sender=EnginePolicyScope)
 def enginepolicyscope_create_update_log(sender, **kwargs):
     if kwargs['created']:
@@ -125,6 +134,7 @@ def enginepolicyscope_create_update_log(sender, **kwargs):
     else:
         Event.objects.create(message="[EnginePolicyScope] Engine policy scope '{}' modified (id={})".format(kwargs['instance'], kwargs['instance'].id),
                              type="UPDATE", severity="DEBUG")
+
 
 @receiver(post_delete, sender=EnginePolicyScope)
 def enginepolicyscope_delete_log(sender, **kwargs):
@@ -210,6 +220,7 @@ class EnginePolicy(models.Model):
             'scope_names': [s.name for s in self.scopes.all()]
         }
 
+
 @receiver(post_save, sender=EnginePolicy)
 def enginepolicy_create_update_log(sender, **kwargs):
     if kwargs['created']:
@@ -218,6 +229,7 @@ def enginepolicy_create_update_log(sender, **kwargs):
     else:
         Event.objects.create(message="[EnginePolicy] Engine policy '{}' modified (id={})".format(kwargs['instance'], kwargs['instance'].id),
                              type="UPDATE", severity="DEBUG")
+
 
 @receiver(post_delete, sender=EnginePolicy)
 def enginepolicy_delete_log(sender, **kwargs):

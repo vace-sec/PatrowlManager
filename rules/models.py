@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.mail import send_mail
 from events.models import Event
 from settings.models import Setting
 from django_celery_beat.models import PeriodicTask
@@ -119,11 +122,14 @@ class Rule(models.Model):
         elif self.target == 'thehive':
             send_thehive_message(self, message, asset, description)
         elif self.target == 'event':
-            Event.objects.create(message="[Alert][Rule={}]{}".format(self.title, message), type="ALERT", severity="INFO")
+            Event.objects.create(
+                message="[Alert][Rule={}]{}".format(self.title, message),
+                type="ALERT", severity="INFO")
 
         self.nb_matches += 1
         print (self.nb_matches)
         self.save()
+
 
 @receiver(post_save, sender=Rule)
 def rule_create_update_log(sender, **kwargs):
@@ -134,6 +140,7 @@ def rule_create_update_log(sender, **kwargs):
         Event.objects.create(message="[Rule] Rule '{}' modified (id={})".format(kwargs['instance'], kwargs['instance'].id),
                              type="UPDATE", severity="DEBUG")
 
+
 @receiver(post_delete, sender=Rule)
 def rule_delete_log(sender, **kwargs):
     Event.objects.create(message="[Rule] Rule '{}' deleted (id={})".format(kwargs['instance'], kwargs['instance'].id),
@@ -141,7 +148,6 @@ def rule_delete_log(sender, **kwargs):
 
 
 def send_email_message(rule, message, description):
-    from django.core.mail import send_mail
     contact_mail = Setting.objects.get(key="alerts.endpoint.email").value
     send_mail(
         '[Patrowl] New alert: '+message,
