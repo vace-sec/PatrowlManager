@@ -259,6 +259,7 @@ class Asset(models.Model):
         risk_score = risk_score + (self.risk_level['low'] * 1)
         risk_score = risk_score + (self.risk_level['medium'] * 3)
         risk_score = risk_score + (self.risk_level['high'] * 10)
+        risk_score = risk_score + (self.risk_level['critical'] * 30)
 
         return risk_score
 
