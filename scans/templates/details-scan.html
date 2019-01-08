@@ -565,7 +565,7 @@ function toggle(source, element) {
 
       <!-- Modal Body -->
       <div class="modal-body">
-        <div id="change-finding-infos" csrf-token="{{ csrf_token }}">
+        <div id="change-finding-infos">
           <!-- Content -->
           <dl class="dl-horizontal">
             <dt>Severity:</dt>
@@ -739,10 +739,11 @@ function toggle(source, element) {
     })
 
     if (findings_to_delete.length != 0){
-      delete_url="{% url 'delete_rawfindings' %}";
+      delete_url="{% url 'delete_rawfindings_api' %}";
       var request = $.ajax({
         url: delete_url,
         method: "POST",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
         data: JSON.stringify(findings_to_delete),
         contentType: "application/json"
       });
@@ -762,10 +763,11 @@ function toggle(source, element) {
     })
 
     if (findings_to_ack.length != 0){
-      ack_url="{% url 'change_rawfindings_status' %}";
+      ack_url="{% url 'change_rawfindings_status_api' %}";
       var request = $.ajax({
         url: ack_url,
         method: "POST",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
         data: JSON.stringify(findings_to_ack),
         contentType: "application/json"
       });

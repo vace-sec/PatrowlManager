@@ -7,9 +7,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
 from users.serializers import UserSerializer
 from users.forms import LoginForm
 from reportings.views import homepage_dashboard_view
@@ -18,6 +19,7 @@ from reportings.views import homepage_dashboard_view
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 @login_required(login_url="login/")
 def home(request):
@@ -84,6 +86,7 @@ def home(request):
     #      })
     return redirect(homepage_dashboard_view)
 
+
 @csrf_exempt
 def login(request):
     default_form = LoginForm()
@@ -100,6 +103,7 @@ def login(request):
             return render(request, 'login.html', {'form': default_form})
     else:
         return render(request, 'login.html', {'form': default_form})
+
 
 @csrf_exempt
 def signup(request):
@@ -118,18 +122,26 @@ def signup(request):
 
 
 def user_details_view(request):
-    user = User.objects.get(id=request.user.id)
-    return render(request, 'details-user.html', {'user': user})
+    user = get_object_or_404(User, id=request.user.id)
+    apitokens = Token.objects.filter(user=request.user)
+    if apitokens.count() >= 1:
+        apitoken = apitokens[0]
+    else:
+        apitoken = ""
+    return render(request, 'details-user.html', {
+        'user': user,
+        'apitoken': apitoken
+    })
 
 
 def list_users_view(request):
     users = User.objects.all()
     return render(request, 'list-users.html', {'users': users})
 
+
 @csrf_exempt
 def add_user_view(request):
     form = None
-
     if request.method == 'GET':
         form = UserCreationForm()
     elif request.method == 'POST':
@@ -143,4 +155,4 @@ def add_user_view(request):
             messages.success(request, 'Creation submission successful')
             return redirect('list_users_view')
 
-    return render(request, 'add-user.html', {'form': form })
+    return render(request, 'add-user.html', {'form': form})

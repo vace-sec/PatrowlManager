@@ -3,12 +3,12 @@
 
 <ul class="breadcrumb">
   <li><a href="{% url 'list_assets_view' %}">assets</a></li>
-  <li class="active">add new assets in bulk [<a href='{% url 'list_assets_view' %}'>back</a>]</li>
+  <li class="active">add new assets in bulk [<a href="{% url 'list_assets_view' %}">back</a>]</li>
 </ul>
 
 <div class="container">
   <form action="{% url 'bulkadd_asset_view' %}" method="post" class="form-horizontal" enctype="multipart/form-data">
-    <legend>Add assets</legend>
+    <legend>Add assets in bulk</legend>
       {% csrf_token %}
       {% for field in form %}
           {% if field.errors %}

@@ -97,8 +97,7 @@
     function refresh_engines_status(){
       $('span.engine-status').empty();
       $('span.running-scans').empty();
-      //$('span.engine-status').append("");
-      var xhr = $.get("{% url 'list_engines_api' %}", function(response) {
+      var xhr = $.get("{% url 'list_engines_intances_api' %}", function(response) {
         engines_json = response.engines;
         for (var engine_id in engines_json) {
           engine = engines_json[engine_id];
@@ -287,10 +286,12 @@
             <span class="glyphicon glyphicon-map-marker"></span> Findings<span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="{% url 'list_findings_view' %}">List</a></li>
+            <li><a href="{% url 'list_findings_view' %}">All findings</a></li>
+            <li><a href="{% url 'list_findings_view' %}?_status=new">New findings</a></li>
+            <li><a href="{% url 'list_findings_view' %}?_status=ack">Ack. findings</a></li>
+            <li role="separator" class="divider"></li>
             <li><a href="{% url 'import_findings_view' %}">Manual import</a></li>
             <li><a href="{% url 'add_finding_view' %}">+ Add finding</a></li>
-            <!-- <li><a href="/findings/export">Export</a></li> -->
           </ul>
         </li>
 
@@ -301,13 +302,9 @@
           </a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="{% url 'list_scans_view' %}">List scans performed</a></li>
-            <!-- <li><a href="{% url 'compare_scans_view' %}">Compare scans</a></li> -->
             <li role="separator" class="divider"></li>
             <li><a href="{% url 'list_scan_def_view' %}">List scans definitions</a></li>
             <li><a href="{% url 'add_scan_def_view' %}">+ Add new scan</a></li>
-            <!-- <li role="separator" class="divider"></li>
-            <li><a href="url 'list_scan_campaigns_view'">List scan campaigns</a></li>
-            <li><a href="url 'add_scan_campaign_view'">+ Add scan Campaign</a></li> -->
           </ul>
         </li>
 
@@ -317,13 +314,13 @@
             <span class="glyphicon glyphicon-screenshot"></span> Engines<span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li class="dropdown-submenu" >
+            <li class="dropdown-submenu">
               <a href="{% url 'list_engines_view' %}"><strong>Scan Engines</strong></a>
               <li><a href="{% url 'list_engines_view' %}">List engines</a></li>
               <li><a href="{% url 'add_engine_view' %}">+ Add scan engine instance</a></li>
             </li>
             <li role="separator" class="divider"></li>
-            <li class="dropdown-submenu" >
+            <li class="dropdown-submenu">
               <a href="{% url 'list_policies_view' %}"><strong>Scan Engines Policies</strong></a>
               <li><a href="{% url 'list_policies_view' %}">List policies</a></li>
               <li><a href="{% url 'add_policy_view' %}">+ Add policy</a></li>
@@ -347,19 +344,6 @@
             <li><a href="{% url 'list_rules_view' %}">List rules</a></li>
           </ul>
         </li>
-
-        <!-- Settings -->
-        <!-- <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
-            <span class="glyphicon glyphicon-wrench"></span> Settings<span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="{% url 'show_settings_menu' %}">Global settings</a></li>
-            <li><a href="{% url 'show_settings_menu' %}">Updates</a></li>
-            <li><a href="{% url 'show_settings_menu' %}">Users</a></li>
-            <li><a href="{% url 'show_settings_menu' %}">Events</a></li>
-          </ul>
-        </li> -->
       </ul>
 
       <form class="navbar-form navbar-left" role="search" method="get" accept-charset="utf-8" action="/search" style="padding-top: 4px;">
@@ -380,8 +364,7 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="{% url 'home' %}"><span class="glyphicon glyphicon-home"></span> Homepage</a></li>
-              <!-- <li><a href="{% url 'homepage_dashboard_view' %}">Dashboards</a></li> -->
+              <li><a href="{% url 'homepage_dashboard_view' %}"><span class="glyphicon glyphicon-home"></span> Homepage</a></li>
               <li><a href="{% url 'show_settings_menu' %}"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
 
               <li class="divider"></li>
