@@ -15,7 +15,7 @@ def show_settings_menu(request):
     """View: List settings menus."""
     from cursor_pagination import CursorPaginator
 
-    users = User.objects.all().annotate(apitoken=F('auth_token'))
+    users = User.objects.all()
     settings = Setting.objects.all().order_by("key")
     events_list = Event.objects.all()
 

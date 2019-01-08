@@ -169,7 +169,7 @@ table tr td.scan-progress {
           <button type="button" class="btn btn-danger btn-xs btn-stop-scan" title="Stop scan" scan-id="{{ scan.id }}">
             <span class="glyphicon glyphicon-stop" scan-id="{{ scan.id }}"></span></button>
           {% else %}
-          <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='{% url 'get_scan_report_html' scan.id %}'">
+          <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='{% url 'get_scan_report_html_api' scan.id %}'">
             <span class="glyphicon glyphicon-share"></span></button>
           {% endif %}
           <button type="button" class="btn btn-warning btn-xs btn-run-now" scan-id="{{ scan.scan_definition.id }}" scan-title="{{ scan.title }}" data-toggle="modal" data-target="#modal-run-scan">
@@ -337,7 +337,7 @@ table tr td.scan-progress {
   date_cursor.setDate(date_cursor.getDate() - range_size + 2); // - 20days
   cal.init({
     id: "cal-heatmap",
-    data: "{% url 'get_scans_heatmap' %}",
+    data: "{% url 'get_scans_heatmap_api' %}",
     itemSelector: "#cal-heatmap",
     domain: "day",
     subDomain: "hour",
@@ -361,7 +361,7 @@ table tr td.scan-progress {
 
       tzoffset = (new Date()).getTimezoneOffset() * 60000;
       date_tz = (new Date(date - tzoffset)).toISOString().split('.')[0]+"Z"
-      scan_url = "{% url 'get_scans_by_date' %}?date=" + date_tz + "&scope=hour"
+      scan_url = "{% url 'get_scans_by_date_api' %}?date=" + date_tz + "&scope=hour"
 
       xhr = $.get(scan_url, function(data) {
         for (i = 0; i < data.length; ++i){

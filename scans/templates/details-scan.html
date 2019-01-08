@@ -413,10 +413,10 @@ function toggle(source, element) {
         <dt>Status:</dt><dd>
           {% if scan.status == "finished" %}
             <span class="label label-success">Finished</span>
-            <a href="{% url 'run_scan_def' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
+            <a href="{% url 'run_scan_def_api' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
           {% elif scan.status == "error" %}
             <span class="label label-danger">Error</span>
-            <a href="{% url 'run_scan_def' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
+            <a href="{% url 'run_scan_def_api' scan.scan_definition.id %}"><span class="label label-warning">Re-run !</span></a>
           {% else %}
             <span class="label label-warning">{{ scan.status|capfirst }}</span>
           {% endif %}
@@ -426,9 +426,9 @@ function toggle(source, element) {
         <dt>Finished at:</dt><dd>{{ scan.finished_at|date:"Y/m/d-H:m:s" }}</dd>
         <dt>Elaspsed:</dt><dd>{{ scan.finished_at|get_time_diff:scan.started_at }}</dd>
         <dt>Reports:</dt><dd>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_json' scan.id %}'">json</button>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_csv' scan.id %}'">csv</button>
-          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_html' scan.id %}'">html</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_json_api' scan.id %}'">json</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_csv_api' scan.id %}'">csv</button>
+          <button type="button" class="btn btn-warning btn-xs" onclick="location.href='{% url 'get_scan_report_html_api' scan.id %}'">html</button>
           <button type="button" class="btn btn-default btn-xs" onclick="location.href='#'">raw</button>
         </dd>
       </dl>
@@ -619,7 +619,7 @@ function toggle(source, element) {
   });
 
   // Show graph in the sidebar
-  getfindings_severities_url = "{% url 'get_findings_stats' %}?scope=scan&scan_id={{scan.id}}";
+  getfindings_severities_url = "{% url 'get_findings_stats_api' %}?scope=scan&scan_id={{scan.id}}";
   chart_fs_config = {
     type: 'doughnut',
     data: {
@@ -790,7 +790,7 @@ function toggle(source, element) {
     });
     if(findings_to_compare.length == 2){
       location.hash = "#findings";
-      window.location.href ="{% url 'compare_rawfindings_view' %}?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
+      window.location.href ="{% url 'compare_findings_view' %}?raw=true&finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
     }
   });
 
