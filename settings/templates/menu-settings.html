@@ -352,7 +352,7 @@
   });
   $("button.btn-delete-setting").on('click', function (e) {
     id = $("div#delete-setting").attr('setting-id');
-    delete_setting_url = "/settings/api/v1/delete/"+id; // TODO: how change this to dynamic url?
+    delete_setting_url = "{% url 'delete_setting_api' 0 %}".replace('0', id);
     var request = $.ajax({
       url: delete_setting_url,
       method: "GET",

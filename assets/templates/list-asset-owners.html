@@ -96,7 +96,7 @@
     });
     $("button.btn-delete-owner").on('click', function (e) {
       owner_id = $("div#delete-owner").attr('owner-id');
-      delete_owner_url = "/assets/owners/delete/"+owner_id; // TODO: how change this to dynamic url
+      delete_owner_uwl = "{% url 'delete_asset_owner_view' 0 %}".replace('0', owner_id);
       var request = $.ajax({
         url: delete_owner_url,
         method: "POST",

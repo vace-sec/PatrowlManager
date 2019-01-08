@@ -256,7 +256,7 @@
       rule_id = e.currentTarget.getAttribute('rule-id');
 
       var request = $.ajax({
-        url: "/rules/api/v1/duplicate/"+rule_id, // TODO: how change this to dynamic url?
+        url: "{% url 'duplicate_rule_api' 0 %}".replace('0', rule_id),
         method: "GET",
       });
       request.done(function(response){
@@ -268,7 +268,7 @@
     $('span.rule-status').on('dblclick', function(e){
       rule_id = e.currentTarget.getAttribute('rule-id');
       var request = $.ajax({
-        url: "/rules/api/v1/change_status/"+rule_id, // TODO: how change this to dynamic url?
+        url: "{% url 'toggle_rule_status_api' 0 %}".replace('0', rule_id),
         method: "GET",
         success: function(){
           if (e.currentTarget.textContent == "Disabled") {

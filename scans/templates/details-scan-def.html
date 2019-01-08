@@ -456,7 +456,7 @@ function print_chart(num_records=20){
         var chartData = activePoints[0]['_chart'].config.data;
         var idx = activePoints[0]['_index'];
         var label = chartData.labels[idx];
-        window.location = "/scans/details/"+label; // TODO: how change this to dynamic url?
+        window.location = "{% url 'detail_scan_view' 0 %}".replace('0', label);
       }
     };
   });
@@ -550,7 +550,7 @@ $(function() {
   });
   $("button.btn-delete-scan").on('click', function (e) {
     id = $("div#delete-scan").attr('scan-id');
-    delete_scan_url = "/scans/delete/"+id; // TODO: how change this to dynamic url?
+    delete_scan_url = "{% url 'delete_scan_view' 0 %}".replace('0', id);
     var request = $.ajax({
       url: delete_scan_url,
       method: "POST",

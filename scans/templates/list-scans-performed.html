@@ -500,7 +500,7 @@ table tr td.scan-progress {
     });
     $("button.btn-delete-scan").on('click', function (e) {
       id = $("div#delete-scan").attr('scan-id');
-      delete_scan_url = "/scans/delete/"+id; // TODO: how change this to dynamic url?
+      delete_scan_url = "{% url 'delete_scan_view' 0 %}".replace('0', id);
       var request = $.ajax({
         url: delete_scan_url,
         method: "POST",

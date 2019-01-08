@@ -182,7 +182,7 @@
     });
     $("button.btn-delete-engine").on('click', function (e) {
       engine_id = $("div#delete-engine").attr('engine-id');
-      delete_engine_url = "/engines/delete/"+engine_id; // TODO: how change this to dynamic url
+      delete_engine_url = "{% url 'delete_engine_view' 0 %}".replace('0', engine_id);
       xhr = $.ajax({
         url: delete_engine_url,
         method: "POST",
