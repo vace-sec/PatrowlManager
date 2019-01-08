@@ -1038,7 +1038,7 @@ div.risk-trends {
         }
       });
       if(findings_to_compare.length == 2){
-        window.location.href ="{% url 'compare_rawfindings_view' %}?finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
+        window.location.href ="{% url 'compare_findings_view' %}?finding_a_id="+findings_to_compare[0]+"&finding_b_id="+findings_to_compare[1];
       }
     });
 
