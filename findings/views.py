@@ -272,7 +272,7 @@ def add_finding_view(request):
                 'links': form.cleaned_data['links'],
                 'tags': str(json.dumps(form.cleaned_data['tags'].split(','))),
                 'status': form.cleaned_data['status'],
-                # 'owner': form.cleaned_data['owner'],
+                'owner': form.cleaned_data['owner'],
                 'asset': form.cleaned_data['asset'],
                 'asset_name': form.cleaned_data['asset'].value,
                 'scan': form.cleaned_data['scan']
