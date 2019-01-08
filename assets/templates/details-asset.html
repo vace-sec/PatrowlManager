@@ -99,8 +99,8 @@ div.risk-trends {
 
         <dt>Download report</dt>
         <dd>
-          <a href="{% url 'get_asset_report_json' asset.id %}">json</a> -
-          <a href="{% url 'get_asset_report_html' asset.id %}">html</a> - pdf - raw
+          <a href="{% url 'get_asset_report_json_api' asset.id %}">json</a> -
+          <a href="{% url 'get_asset_report_html_api' asset.id %}">html</a> - pdf - raw
         </dd>
       </dl>
     </div><!-- End of first col -->
@@ -558,13 +558,13 @@ div.risk-trends {
           {% for doc in owner.documents.all %}
             <li>
               {% if doc.tlp_color == 'red' %}
-              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-danger">TLP:RED</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc_api' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-danger">TLP:RED</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'amber' %}
-              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-warning">TLP:AMBER</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc_api' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-warning">TLP:AMBER</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'green' %}
-              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-success">TLP:GREEN</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc_api' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-success">TLP:GREEN</span> ({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
               {% elif doc.tlp_color == 'white' %}
-              <a href="{% url 'get_asset_owner_doc' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-white" style="color: black;">TLP:WHITE</span>({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
+              <a href="{% url 'get_asset_owner_doc_api' doc.id %}">{{ doc.filename }}</a> - {{ doc.doctitle }} <span class="label label-white" style="color: black;">TLP:WHITE</span>({{ doc.updated_at|date:"Y/m/d-H:m:s" }})
             {% endif %}
              </li>
           {% endfor %}
@@ -788,7 +788,7 @@ div.risk-trends {
   function print_asset_trends_chart(period = "week", max_ticks = 20){
     if(asset_trends_chart){ asset_trends_chart.destroy(); }
     // update the findings stat pies
-    asset_trends_chart_url = "{% url 'get_asset_trends' asset.id %}?period_by="+period+"&max_ticks="+max_ticks;
+    asset_trends_chart_url = "{% url 'get_asset_trends_api' asset.id %}?period_by="+period+"&max_ticks="+max_ticks;
 
     //data_labels_id = [];
     data_labels_date = [];

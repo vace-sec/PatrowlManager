@@ -293,9 +293,9 @@ hr {
     //finding_id = "{{finding.id}}";
     gen_alert_url = ""
     if (qs('raw') == "true") {
-      gen_alert_url = "{% url 'generate_finding_alerts' finding.id %}?raw=true";
+      gen_alert_url = "{% url 'generate_finding_alerts_api' finding.id %}?raw=true";
     } else {
-      gen_alert_url = "{% url 'generate_finding_alerts' finding.id %}";
+      gen_alert_url = "{% url 'generate_finding_alerts_api' finding.id %}";
     }
     var request = $.ajax({
       url: gen_alert_url,
@@ -315,7 +315,7 @@ hr {
     }
 
     var request = $.ajax({
-      url: "{% url 'update_finding_comments' finding.id %}",
+      url: "{% url 'update_finding_comments_api' finding.id %}",
       method: "POST",
       data: comments,
       success: function(data){

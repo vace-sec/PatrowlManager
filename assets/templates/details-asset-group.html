@@ -97,7 +97,7 @@ div.risk-trends {
         <dt>Download report</dt>
         <dd>
           <a href="/assets/groups/report/json/{{ asset_group.id }}">json</a> -
-          <a href="{% url 'get_asset_group_report_html' asset_group.id %}">html</a> -
+          <a href="{% url 'get_asset_group_report_html_api' asset_group.id %}">html</a> -
           pdf
         </dd>
         <dt>Export assets</dt>
@@ -542,7 +542,7 @@ div.risk-trends {
                 <button type="button" class="btn btn-danger btn-xs btn-stop-scan" title="Stop scan" scan-id="{{ scan.id }}">
                   <span class="glyphicon glyphicon-stop" scan-id="{{ scan.id }}"></span></button>
                 {% else %}
-                <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='{% url 'get_scan_report_html' scan.id %}'">
+                <button type="button" class="btn btn-default btn-xs" title="Export scan findings" onclick="location.href='{% url 'get_scan_report_html_api' scan.id %}'">
                   <span class="glyphicon glyphicon-share"></span></button>
                 {% endif %}
                 <button type="button" class="btn btn-warning btn-xs btn-run-now" scan-id="{{ scan.scan_definition__id }}" scan-title="{{ scan.title }}" data-toggle="modal" data-target="#modal-run-scan">
